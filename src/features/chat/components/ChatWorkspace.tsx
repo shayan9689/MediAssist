@@ -4,7 +4,6 @@ import { useAuth } from '@/features/auth/context/auth-context'
 import { TopicSelector } from '@/features/chat/components/TopicSelector'
 import { ChatComposer } from '@/features/chat/components/ChatComposer'
 import { ChatMessageThread } from '@/features/chat/components/ChatMessageThread'
-import { ChatSessionSidebar } from '@/features/chat/components/ChatSessionSidebar'
 import { ChatLandingHero } from '@/features/chat/components/ChatLandingHero'
 import { ChatSuggestionChips } from '@/features/chat/components/ChatSuggestionChips'
 import { useChatStore } from '@/features/chat/store/chat-store'
@@ -45,74 +44,70 @@ export function ChatWorkspace() {
     status === 'loading' ? 'Loading chats…' : status === 'sending' ? 'Working…' : null
 
   return (
-    <div className="gpt-shell">
-      <ChatSessionSidebar />
-
-      <div className="gpt-main">
-        <header className="gpt-toolbar">
-          <div className="gpt-toolbar-left">
-            <div className="gpt-toolbar-brand">
-              <img
-                src={`${import.meta.env.BASE_URL}logo/${encodeURIComponent(TOOLBAR_LOGO_FILE)}`}
-                alt="Nurse AI"
-                className="gpt-toolbar-logo"
-                decoding="async"
-              />
-            </div>
-          </div>
-
-          <div className="gpt-toolbar-right">
-            <TopicSelector
-              variant="toolbar"
-              value={topicDraft}
-              onChange={setTopicDraft}
-              disabled={status === 'loading'}
+    <div className="chat-workspace-root">
+      <header className="gpt-toolbar">
+        <div className="gpt-toolbar-left">
+          <div className="gpt-toolbar-brand">
+            <img
+              src={`${import.meta.env.BASE_URL}logo/${encodeURIComponent(TOOLBAR_LOGO_FILE)}`}
+              alt="Nurse AI"
+              className="gpt-toolbar-logo"
+              decoding="async"
             />
-
-            {enableAuth && user ? (
-              <>
-                <span className="gpt-toolbar-hint gpt-toolbar-email">{user.email}</span>
-                <button type="button" className="gpt-toolbar-btn" onClick={() => void handleSignOut()}>
-                  Sign out
-                </button>
-              </>
-            ) : enableAuth ? (
-              <Link to="/login" className="inline-link gpt-toolbar-link">
-                Sign in
-              </Link>
-            ) : null}
           </div>
-        </header>
-
-        {headerStatus ? <p className="chat-status-banner">{headerStatus}</p> : null}
-
-        {error ? (
-          <div className="chat-error-banner" role="alert">
-            <span>{error}</span>
-            <button type="button" className="chat-error-dismiss" onClick={() => clearError()}>
-              Dismiss
-            </button>
-          </div>
-        ) : null}
-
-        <div className="gpt-main-stage">
-          {hasConversation ? (
-            <>
-              <div className="gpt-scroll">
-                <ChatMessageThread />
-              </div>
-              <div className="gpt-dock">
-                <ChatComposer variant="dock" />
-              </div>
-            </>
-          ) : (
-            <div className="gpt-landing">
-              <ChatLandingHero />
-              <ChatComposer variant="centered" />
-              <ChatSuggestionChips />
-            </div>
-          )}
         </div>
+
+        <div className="gpt-toolbar-right">
+          <TopicSelector
+            variant="toolbar"
+            value={topicDraft}
+            onChange={setTopicDraft}
+            disabled={status === 'loading'}
+          />
+
+          {enableAuth && user ? (
+            <>
+              <span className="gpt-toolbar-hint gpt-toolbar-email">{user.email}</span>
+              <button type="button" className="gpt-toolbar-btn" onClick={() => void handleSignOut()}>
+                Sign out
+              </button>
+            </>
+          ) : enableAuth ? (
+            <Link to="/login" className="inline-link gpt-toolbar-link">
+              Sign in
+            </Link>
+          ) : null}
+        </div>
+      </header>
+
+      {headerStatus ? <p className="chat-status-banner">{headerStatus}</p> : null}
+
+      {error ? (
+        <div className="chat-error-banner" role="alert">
+          <span>{error}</span>
+          <button type="button" className="chat-error-dismiss" onClick={() => clearError()}>
+            Dismiss
+          </button>
+        </div>
+      ) : null}
+
+      <div className="gpt-main-stage">
+        {hasConversation ? (
+          <>
+            <div className="gpt-scroll">
+              <ChatMessageThread />
+            </div>
+            <div className="gpt-dock">
+              <ChatComposer variant="dock" />
+            </div>
+          </>
+        ) : (
+          <div className="gpt-landing">
+            <ChatLandingHero />
+            <ChatComposer variant="centered" />
+            <ChatSuggestionChips />
+          </div>
+        )}
       </div>
     </div>
   )

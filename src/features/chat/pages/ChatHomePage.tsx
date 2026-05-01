@@ -1,5 +1,5 @@
-import { ChatShell } from '@/features/chat/components/ChatShell'
+import { ChatWorkspace } from '@/features/chat/components/ChatWorkspace'
 
 export function ChatHomePage() {
-  return <ChatShell />
+  return <ChatWorkspace />
 }

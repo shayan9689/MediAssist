@@ -4,7 +4,9 @@ import { AppProviders } from '@/app/providers/AppProviders'
 export function App() {
   return (
     <AppProviders>
-      <AppRouter />
+      <div className="app-root-fill">
+        <AppRouter />
+      </div>
     </AppProviders>
   )
 }
