@@ -1,57 +1,35 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useChatStore } from '@/features/chat/store/chat-store'
 
-function SessionMenuIcon() {
+function TrashIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <circle cx="12" cy="5" r="2" />
-      <circle cx="12" cy="12" r="2" />
-      <circle cx="12" cy="19" r="2" />
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M9 3h6m-7 4h8m-9 4v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V11M10 11v6m4-6v6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   )
 }
 
 export function ChatRecentsSection() {
+  const navigate = useNavigate()
   const sessions = useChatStore((state) => state.sessions)
   const activeSessionId = useChatStore((state) => state.activeSessionId)
   const selectSession = useChatStore((state) => state.selectSession)
   const deleteSession = useChatStore((state) => state.deleteSession)
   const status = useChatStore((state) => state.status)
 
-  const [menuSessionId, setMenuSessionId] = useState<string | null>(null)
-
-  const closeMenu = useCallback(() => setMenuSessionId(null), [])
-
-  useEffect(() => {
-    if (!menuSessionId) return
-
-    function handlePointerDown(event: MouseEvent) {
-      const target = event.target as Node
-      const menuEl = document.querySelector(`[data-session-menu="${menuSessionId}"]`)
-      if (menuEl?.contains(target)) return
-      const triggerEl = document.querySelector(`[data-session-menu-trigger="${menuSessionId}"]`)
-      if (triggerEl?.contains(target)) return
-      closeMenu()
-    }
-
-    function handleKey(event: KeyboardEvent) {
-      if (event.key === 'Escape') closeMenu()
-    }
-
-    document.addEventListener('mousedown', handlePointerDown)
-    document.addEventListener('keydown', handleKey)
-    return () => {
-      document.removeEventListener('mousedown', handlePointerDown)
-      document.removeEventListener('keydown', handleKey)
-    }
-  }, [menuSessionId, closeMenu])
+  const [pendingDeleteSessionId, setPendingDeleteSessionId] = useState<string | null>(null)
 
   const isBusy = status === 'loading' || status === 'sending'
 
   async function handleDeleteChat(sessionId: string) {
-    closeMenu()
-    const ok = window.confirm('Delete this chat? This cannot be undone.')
-    if (!ok) return
+    setPendingDeleteSessionId(null)
     await deleteSession(sessionId)
   }
 
@@ -65,7 +43,6 @@ export function ChatRecentsSection() {
           {sessions.map((session) => {
             const isActive = session.id === activeSessionId
             const preview = session.messages.at(-1)?.content ?? 'New chat'
-            const menuOpen = menuSessionId === session.id
 
             return (
               <li
@@ -77,8 +54,8 @@ export function ChatRecentsSection() {
                   className="gpt-session-row-main"
                   title={preview}
                   onClick={() => {
-                    closeMenu()
                     void selectSession(session.id)
+                    navigate('/chat')
                   }}
                 >
                   <span className="gpt-session-row-title">{session.title}</span>
@@ -87,44 +64,50 @@ export function ChatRecentsSection() {
                 <div className="gpt-session-row-actions">
                   <button
                     type="button"
-                    data-session-menu-trigger={session.id}
-                    className={`gpt-session-menu-trigger${menuOpen ? ' gpt-session-menu-trigger-open' : ''}`}
-                    aria-label={`Options for ${session.title}`}
-                    aria-expanded={menuOpen}
-                    aria-haspopup="menu"
+                    className="gpt-session-menu-trigger gpt-session-delete-btn"
+                    aria-label={`Delete ${session.title}`}
+                    title="Delete chat"
                     disabled={isBusy}
                     onClick={(event) => {
                       event.stopPropagation()
-                      setMenuSessionId((current) => (current === session.id ? null : session.id))
+                      setPendingDeleteSessionId(session.id)
                     }}
                   >
-                    <SessionMenuIcon />
+                    <TrashIcon />
                   </button>
-
-                  {menuOpen ? (
-                    <div
-                      className="gpt-session-menu"
-                      data-session-menu={session.id}
-                      role="menu"
-                      aria-orientation="vertical"
-                    >
-                      <button
-                        type="button"
-                        role="menuitem"
-                        className="gpt-session-menu-item gpt-session-menu-item-danger"
-                        disabled={isBusy}
-                        onClick={() => void handleDeleteChat(session.id)}
-                      >
-                        Delete chat
-                      </button>
-                    </div>
-                  ) : null}
                 </div>
               </li>
             )
           })}
         </ul>
       )}
+
+      {pendingDeleteSessionId ? (
+        <div className="gpt-confirm-overlay" role="dialog" aria-modal="true" aria-labelledby="delete-chat-title">
+          <div className="gpt-confirm-card">
+            <h3 id="delete-chat-title" className="gpt-confirm-title">
+              Delete this chat?
+            </h3>
+            <p className="gpt-confirm-copy">This action cannot be undone.</p>
+            <div className="gpt-confirm-actions">
+              <button
+                type="button"
+                className="gpt-confirm-btn gpt-confirm-btn-cancel"
+                onClick={() => setPendingDeleteSessionId(null)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className="gpt-confirm-btn gpt-confirm-btn-danger"
+                onClick={() => void handleDeleteChat(pendingDeleteSessionId)}
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

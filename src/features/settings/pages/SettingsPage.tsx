@@ -1,16 +1,24 @@
 import { useState } from 'react'
+import { useAuth } from '@/features/auth/context/auth-context'
 import { mockProfile, mockUsage } from '@/shared/mock/settings'
 
 export function SettingsPage() {
+  const { user } = useAuth()
   const [emailTips, setEmailTips] = useState(false)
   const [quizDigest, setQuizDigest] = useState(true)
 
+  const displayName =
+    user?.email?.split('@')[0] ?? mockProfile.displayName
+
   return (
-    <div className="page-root">
-      <header className="page-header">
+    <div className="page-root app-feature-page">
+      <header className="page-header app-feature-hero">
         <p className="page-eyebrow">Account</p>
         <h1 className="page-title">Settings</h1>
-        <p className="page-lead">Mock profile and preferences — persistence arrives with Supabase.</p>
+        <p className="page-lead">
+          Profile details follow your login when authentication is enabled. Toggles below stay on this device only until
+          notification preferences are wired to the backend.
+        </p>
       </header>
 
       <section className="page-section">
@@ -19,7 +27,11 @@ export function SettingsPage() {
           <dl className="settings-dl">
             <div>
               <dt>Display name</dt>
-              <dd>{mockProfile.displayName}</dd>
+              <dd>{displayName}</dd>
+            </div>
+            <div>
+              <dt>Email</dt>
+              <dd>{user?.email ?? '—'}</dd>
             </div>
             <div>
               <dt>Exam goal</dt>
@@ -30,7 +42,7 @@ export function SettingsPage() {
               <dd>{mockProfile.targetDate}</dd>
             </div>
           </dl>
-          <p className="ui-card-hint">Edit controls will map to your user row once authentication is enabled.</p>
+          <p className="ui-card-hint">Exam goal and target date are sample fields for upcoming profile sync.</p>
         </article>
       </section>
 
@@ -49,7 +61,7 @@ export function SettingsPage() {
       </section>
 
       <section className="page-section">
-        <h2 className="page-section-title">Usage (mock)</h2>
+        <h2 className="page-section-title">Usage (illustrative)</h2>
         <div className="usage-grid">
           {mockUsage.map((row) => {
             const pct = Math.min(100, Math.round((row.used / row.cap) * 100))

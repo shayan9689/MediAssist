@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
+<title>NurseAI - Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Manrope:wght@600;700;800&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary-container": "#b15f00",
+                        "secondary": "#006a61",
+                        "surface-container-low": "#eff4ff",
+                        "on-error": "#ffffff",
+                        "on-tertiary-fixed-variant": "#6e3900",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-tint": "#006398",
+                        "on-tertiary-fixed": "#2f1500",
+                        "surface-variant": "#d3e4fe",
+                        "surface-dim": "#cbdbf5",
+                        "surface-container-high": "#dce9ff",
+                        "secondary-container": "#86f2e4",
+                        "inverse-on-surface": "#eaf1ff",
+                        "primary-container": "#007bb9",
+                        "tertiary-fixed-dim": "#ffb77d",
+                        "tertiary-fixed": "#ffdcc3",
+                        "on-secondary-fixed": "#00201d",
+                        "on-primary-fixed-variant": "#004b73",
+                        "primary-fixed-dim": "#93ccff",
+                        "inverse-surface": "#213145",
+                        "background": "#f8f9ff",
+                        "surface-container-highest": "#d3e4fe",
+                        "outline": "#707881",
+                        "on-background": "#0b1c30",
+                        "on-primary": "#ffffff",
+                        "primary": "#006194",
+                        "on-secondary-container": "#006f66",
+                        "on-error-container": "#93000a",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-surface": "#0b1c30",
+                        "tertiary": "#8d4b00",
+                        "on-primary-fixed": "#001d31",
+                        "error": "#ba1a1a",
+                        "on-secondary": "#ffffff",
+                        "on-primary-container": "#fdfcff",
+                        "surface-bright": "#f8f9ff",
+                        "inverse-primary": "#93ccff",
+                        "on-surface-variant": "#3f4850",
+                        "outline-variant": "#bfc7d2",
+                        "on-tertiary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed": "#89f5e7",
+                        "surface": "#f8f9ff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "on-tertiary-container": "#fffbff",
+                        "primary-fixed": "#cce5ff",
+                        "surface-container": "#e5eeff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "md": "1rem",
+                        "gutter": "1.5rem",
+                        "lg": "1.5rem",
+                        "xs": "0.25rem",
+                        "margin-desktop": "2.5rem",
+                        "sm": "0.5rem",
+                        "base": "4px",
+                        "margin-mobile": "1rem",
+                        "xl": "2rem"
+                    },
+                    "fontFamily": {
+                        "body-sm": ["Inter"],
+                        "vitals": ["Space Grotesk"],
+                        "body-main": ["Inter"],
+                        "h3": ["Manrope"],
+                        "medical-term": ["Inter"],
+                        "h1": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "label-caps": ["Inter"]
+                    },
+                    "fontSize": {
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "vitals": ["14px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-main": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "medical-term": ["16px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                        "h1": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "h2": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body { background-color: #f8f9ff; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-main text-on-surface">
+<!-- TopAppBar -->
+<header class="w-full h-16 sticky top-0 bg-white/80 backdrop-blur-md border-b border-slate-200 flex items-center justify-between px-4 lg:pl-[300px] w-full z-30">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-sky-600">menu</span>
+<span class="text-lg font-black text-sky-700 tracking-tight">NurseAI</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="text-xs font-bold font-manrope uppercase tracking-wider text-sky-600 bg-sky-50 px-2 py-1 rounded">Mode: Clinical</span>
+</div>
+</header>
+<!-- Sidebar (Desktop NavigationDrawer) -->
+<aside class="hidden lg:flex flex-col fixed left-0 top-0 bottom-0 z-40 w-[280px] bg-white border-r border-slate-200 shadow-sm">
+<div class="p-6 flex flex-col items-start border-b border-slate-100">
+<div class="w-12 h-12 rounded-full overflow-hidden bg-sky-100 mb-3">
+<img class="w-full h-full object-cover" data-alt="A professional headshot of a young nurse educator with a kind expression, wearing clinical scrubs in a bright, modern hospital setting. The lighting is soft and high-key, reflecting a professional medical atmosphere. The overall color palette uses sterile whites and calming clinical blues, maintaining a high-end corporate healthcare aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgSlOFMadnF5axRouPsJ6nt-44wStI3nctMirPTpxDrYn6KZbo-oegKiZk74W6423zNmVj0saKmoEHBokvuXtFpzjzOHe06uFA-ft5wvsNEnmYllTLbmp5P3DhUMROteSRZMey54QR_5bXitRp0MFGzqtih71SfkOZL1vE29Y3Ae5GG7cQRxuh0THswqmJZx4h7QYJorPYs9uUln0R0ikhu3Crw9gbR7-0c5XeWftHotyHrbJX8A0bUNcLpEZHF8oNAolpc8gzmvSB"/>
+</div>
+<h2 class="text-xl font-bold text-sky-700 tracking-tight">Nurse Educator</h2>
+<p class="text-slate-600 text-sm font-medium">Clinical Unit A</p>
+<span class="mt-2 text-[10px] font-bold uppercase tracking-widest text-sky-600 bg-sky-50 px-2 py-0.5 rounded-full">Level 4 Mastery</span>
+</div>
+<nav class="flex-1 px-4 py-6 space-y-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-sky-50 text-sky-700 border-r-4 border-sky-600 transition-all font-medium text-sm" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+                Drug Library
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm" href="#">
+<span class="material-symbols-outlined">clinical_notes</span>
+                Case Studies
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm" href="#">
+<span class="material-symbols-outlined">quiz</span>
+                Practice Quizzes
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-medium text-sm" href="#">
+<span class="material-symbols-outlined">insights</span>
+                Topic Mastery
+            </a>
+</nav>
+</aside>
+<main class="lg:pl-[280px] pb-24 lg:pb-12">
+<div class="max-w-5xl mx-auto px-margin-mobile md:px-margin-desktop py-8">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+<div>
+<h1 class="font-h1 text-h1 text-on-surface">Welcome back, Sarah</h1>
+<p class="text-on-surface-variant font-body-main">Ready to advance your clinical expertise today?</p>
+</div>
+<div class="flex items-center gap-2 bg-primary-container text-on-primary-container px-4 py-2 rounded-xl shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">workspace_premium</span>
+<span class="font-label-caps text-label-caps">Level 4 Mastery</span>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)]">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary">chat_bubble</span>
+</div>
+<p class="font-vitals text-h3">12</p>
+<p class="font-label-caps text-slate-500 mt-1">Chats</p>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)]">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-primary">quiz</span>
+</div>
+<p class="font-vitals text-h3">8</p>
+<p class="font-label-caps text-slate-500 mt-1">Quizzes</p>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)]">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-secondary">trending_up</span>
+</div>
+<p class="font-vitals text-h3">88%</p>
+<p class="font-label-caps text-slate-500 mt-1">Avg Score</p>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)]">
+<div class="flex items-center justify-between mb-2">
+<span class="material-symbols-outlined text-tertiary">inventory_2</span>
+</div>
+<p class="font-vitals text-h3">5</p>
+<p class="font-label-caps text-slate-500 mt-1">Saved Packs</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Topic Mastery -->
+<section class="md:col-span-7 bg-white p-6 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)]">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-h3 text-h3">Topic Mastery</h3>
+<span class="material-symbols-outlined text-slate-400">insights</span>
+</div>
+<div class="space-y-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-medical-term text-medical-term">Pharmacology</span>
+<span class="font-vitals text-primary">92%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 92%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-medical-term text-medical-term">Cardiology</span>
+<span class="font-vitals text-primary">75%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 75%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-medical-term text-medical-term">Pediatrics</span>
+<span class="font-vitals text-primary">64%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 64%"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-center mb-2">
+<span class="font-medical-term text-medical-term">Neurology</span>
+<span class="font-vitals text-primary">48%</span>
+</div>
+<div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+<div class="bg-primary h-full rounded-full" style="width: 48%"></div>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-primary font-bold border-2 border-primary rounded-xl hover:bg-sky-50 transition-colors">
+                        View Detailed Analytics
+                    </button>
+</section>
+<!-- Quick Start Actions -->
+<section class="md:col-span-5 flex flex-col gap-4">
+<h3 class="font-h3 text-h3 mb-2">Quick Start</h3>
+<div class="group cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)] hover:border-primary transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-sky-100 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined">smart_toy</span>
+</div>
+<div class="flex-1">
+<h4 class="font-medical-term text-medical-term">Start Chat</h4>
+<p class="text-body-sm text-slate-500">Instant clinical guidance &amp; review</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-primary">arrow_forward_ios</span>
+</div>
+</div>
+<div class="group cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)] hover:border-primary transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined">add_task</span>
+</div>
+<div class="flex-1">
+<h4 class="font-medical-term text-medical-term">New Quiz</h4>
+<p class="text-body-sm text-slate-500">Test your mastery of current topics</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-secondary">arrow_forward_ios</span>
+</div>
+</div>
+<div class="group cursor-pointer bg-white p-5 rounded-xl border border-slate-200 shadow-[0_4px_12px_rgba(15,23,42,0.05)] hover:border-primary transition-all">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined">search</span>
+</div>
+<div class="flex-1">
+<h4 class="font-medical-term text-medical-term">Drug Lookup</h4>
+<p class="text-body-sm text-slate-500">Search 10,000+ clinical drug profiles</p>
+</div>
+<span class="material-symbols-outlined text-slate-300 group-hover:text-tertiary">arrow_forward_ios</span>
+</div>
+</div>
+<!-- Promo Card / Next Milestone -->
+<div class="mt-4 p-5 bg-gradient-to-br from-primary to-sky-700 rounded-xl text-white relative overflow-hidden">
+<div class="relative z-10">
+<h4 class="font-bold text-lg mb-1">Next Milestone</h4>
+<p class="text-sky-100 text-sm mb-4">Master 3 more Cardiology modules to reach Level 5.</p>
+<button class="bg-white text-primary px-4 py-2 rounded-lg font-bold text-xs uppercase tracking-widest">Resume Learning</button>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-white/10 text-9xl">school</span>
+</div>
+</section>
+</div>
+</div>
+</main>
+<!-- BottomNavBar -->
+<nav class="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center px-6 pb-safe h-[64px] bg-white border-t border-slate-200 shadow-[0_-4px_12px_rgba(15,23,42,0.05)]">
+<a class="flex flex-col items-center justify-center text-sky-600 border-t-2 border-sky-600 pt-1" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+<span class="text-[10px] font-bold font-manrope uppercase tracking-wider">Home</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 pt-1" href="#">
+<span class="material-symbols-outlined">book</span>
+<span class="text-[10px] font-bold font-manrope uppercase tracking-wider">Library</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 pt-1" href="#">
+<span class="material-symbols-outlined">timer</span>
+<span class="text-[10px] font-bold font-manrope uppercase tracking-wider">Quiz</span>
+</a>
+<a class="flex flex-col items-center justify-center text-slate-400 pt-1" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[10px] font-bold font-manrope uppercase tracking-wider">Stats</span>
+</a>
+</nav>
+</body></html>

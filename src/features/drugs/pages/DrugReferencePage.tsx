@@ -1,76 +1,113 @@
-import { useMemo, useState } from 'react'
-import { mockDrugs } from '@/shared/mock/drugs'
+import { useState } from 'react'
+import { fetchDrugCard, type DrugCard } from '@/features/shared/services/clinical-api'
 
 export function DrugReferencePage() {
   const [query, setQuery] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [card, setCard] = useState<DrugCard | null>(null)
 
-  const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase()
-    if (!q) return mockDrugs
-    return mockDrugs.filter(
-      (d) =>
-        d.genericName.toLowerCase().includes(q) ||
-        d.commonUses.some((u) => u.toLowerCase().includes(q)) ||
-        d.keyPoints.some((k) => k.toLowerCase().includes(q)),
-    )
-  }, [query])
+  async function handleSearch() {
+    const name = query.trim()
+    if (!name) return
+    setLoading(true)
+    setError(null)
+    try {
+      const next = await fetchDrugCard(name)
+      setCard(next)
+    } catch (lookupError) {
+      setError(lookupError instanceof Error ? lookupError.message : 'Failed to fetch drug card')
+    } finally {
+      setLoading(false)
+    }
+  }
 
   return (
-    <div className="page-root">
-      <header className="page-header">
+    <div className="page-root app-feature-page">
+      <header className="page-header app-feature-hero">
         <p className="page-eyebrow">Reference</p>
         <h1 className="page-title">Drug cards</h1>
         <p className="page-lead">
-          Mock formulary for NCLEX-style teaching points. Search is client-side only until the backend ships.
+          Search any drug name to generate a structured pharmacology card with NCLEX-focused nursing guidance. Always verify
+          with your facility formulary and orders.
         </p>
       </header>
 
-      <label className="ui-field">
-        <span className="ui-field-label">Search</span>
-        <input
-          type="search"
-          className="ui-input"
-          placeholder="e.g. metoprolol, diuretic, insulin…"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          autoComplete="off"
-        />
-      </label>
+      <div className="app-tool-panel">
+        <h2 className="page-section-title">Lookup</h2>
+        <p className="ui-card-hint app-tool-lead">Generic or brand names work. Press Enter to search.</p>
+        <label className="ui-field">
+          <span className="ui-field-label">Drug name</span>
+          <input
+            type="search"
+            className="ui-input ui-input-full"
+            placeholder="e.g. metoprolol, furosemide, insulin…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                void handleSearch()
+              }
+            }}
+            autoComplete="off"
+          />
+        </label>
+        <button type="button" className="primary-button" onClick={() => void handleSearch()} disabled={loading}>
+          {loading ? 'Searching…' : 'Generate drug card'}
+        </button>
+      </div>
 
-      <div className="drug-grid">
-        {filtered.map((drug) => (
-          <article key={drug.id} className="ui-card ui-card-drug">
-            <h2 className="ui-card-drug-name">{drug.genericName}</h2>
+      {error ? <p className="error-text">{error}</p> : null}
+
+      {card ? (
+        <div className="drug-grid">
+          <article className="ui-card ui-card-drug">
+            <h2 className="ui-card-drug-name">{card.drugName}</h2>
+            <section className="ui-card-drug-block">
+              <h3 className="ui-card-drug-heading">Class</h3>
+              <p>{card.drugClass}</p>
+            </section>
+            <section className="ui-card-drug-block">
+              <h3 className="ui-card-drug-heading">Mechanism</h3>
+              <p>{card.mechanism}</p>
+            </section>
             <section className="ui-card-drug-block">
               <h3 className="ui-card-drug-heading">Uses</h3>
               <ul className="ui-dot-list">
-                {drug.commonUses.map((u) => (
+                {card.indications.map((u) => (
                   <li key={u}>{u}</li>
                 ))}
               </ul>
             </section>
             <section className="ui-card-drug-block">
-              <h3 className="ui-card-drug-heading">Key points</h3>
+              <h3 className="ui-card-drug-heading">Contraindications</h3>
               <ul className="ui-dot-list">
-                {drug.keyPoints.map((k) => (
+                {card.contraindications.map((k) => (
                   <li key={k}>{k}</li>
                 ))}
               </ul>
             </section>
             <section className="ui-card-drug-block">
-              <h3 className="ui-card-drug-heading">Cautions</h3>
+              <h3 className="ui-card-drug-heading">Side effects</h3>
               <ul className="ui-dot-list">
-                {drug.cautions.map((c) => (
+                {card.sideEffects.map((c) => (
                   <li key={c}>{c}</li>
                 ))}
               </ul>
             </section>
-            <p className="ui-card-nclex">{drug.nclexAngle}</p>
+            <section className="ui-card-drug-block">
+              <h3 className="ui-card-drug-heading">Nursing notes</h3>
+              <ul className="ui-dot-list">
+                {card.nursingNotes.map((n) => (
+                  <li key={n}>{n}</li>
+                ))}
+              </ul>
+            </section>
+            <p className="ui-card-nclex">{card.nclexPriority}</p>
           </article>
-        ))}
-      </div>
-
-      {filtered.length === 0 ? <p className="page-empty">No mock drugs match that search.</p> : null}
+        </div>
+      ) : null}
     </div>
   )
 }

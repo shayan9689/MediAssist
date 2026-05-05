@@ -1,5 +1,4 @@
-import { useCallback, useState } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '@/features/auth/context/auth-context'
 import { ChatRecentsSection } from '@/features/chat/components/ChatRecentsSection'
 import { useChatStore } from '@/features/chat/store/chat-store'
@@ -10,8 +9,13 @@ const BRAND_LOGO_FILE = 'Screenshot 2026-05-01 102704.png'
 function IconDashboard({ className }: { className?: string }) {
   return (
     <svg className={className} width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" fill="none" />
-      <circle cx="12" cy="12" r="3" fill="currentColor" />
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinejoin="round"
+        d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5v-6H10v6H5a1 1 0 0 1-1-1v-9.5z"
+      />
     </svg>
   )
 }
@@ -19,7 +23,14 @@ function IconDashboard({ className }: { className?: string }) {
 function IconChat({ className }: { className?: string }) {
   return (
     <svg className={className} width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-      <path fill="currentColor" d="M12 5.5 17.5 12 12 18.5 6.5 12z" />
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M8 12h.01M12 12h.01M16 12h.01m5 0c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+      />
     </svg>
   )
 }
@@ -31,7 +42,8 @@ function IconQuiz({ className }: { className?: string }) {
         fill="none"
         stroke="currentColor"
         strokeWidth="2"
-        d="M12 5.5 17.5 12 12 18.5 6.5 12z"
+        strokeLinejoin="round"
+        d="M8 6h13M8 12h13M8 18h13M4 6h.01M4 12h.01M4 18h.01"
       />
     </svg>
   )
@@ -79,32 +91,18 @@ function IconSettings({ className }: { className?: string }) {
   )
 }
 
-function isDashboardSectionPath(pathname: string): boolean {
-  if (pathname === '/') return true
-  const prefixes = ['/chat', '/quiz', '/drugs', '/case', '/settings']
-  return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`))
-}
-
 const subNavClass = ({ isActive }: { isActive: boolean }) =>
   `gpt-sidebar-nav-link gpt-sidebar-nav-sublink${isActive ? ' gpt-sidebar-nav-link-active' : ''}`
 
 export function AppSidebar() {
-  const location = useLocation()
   const navigate = useNavigate()
   const { user, signOut } = useAuth()
   const createSession = useChatStore((state) => state.createSession)
   const status = useChatStore((state) => state.status)
 
-  const sectionActive = isDashboardSectionPath(location.pathname)
-  const [dashboardOpen, setDashboardOpen] = useState(false)
-
-  const toggleDashboard = useCallback(() => {
-    setDashboardOpen((open) => !open)
-  }, [])
-
   const displayName = user?.email?.split('@')[0] ?? 'You'
   const isBusy = status === 'loading' || status === 'sending'
-  const showChatRecents = location.pathname.startsWith('/chat')
+  const showChatRecents = true
 
   async function handleNewChat() {
     await createSession()
@@ -119,8 +117,6 @@ export function AppSidebar() {
     }
   }
 
-  const parentLooksActive = sectionActive && !dashboardOpen
-
   return (
     <aside className="gpt-sidebar">
       <div className="gpt-sidebar-top">
@@ -131,8 +127,39 @@ export function AppSidebar() {
             className="gpt-sidebar-brand-logo"
             decoding="async"
           />
-          <span className="gpt-sidebar-brand-text">MediAssist</span>
+          <span className="gpt-sidebar-brand-text">NurseAI</span>
         </NavLink>
+
+        <nav className="gpt-sidebar-nav" aria-label="Product">
+          <div className="gpt-sidebar-nav-group">
+            <div className="gpt-sidebar-nav-children gpt-sidebar-nav-children-always">
+              <NavLink to="/" className={subNavClass} end>
+                <IconDashboard className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Home
+              </NavLink>
+              <NavLink to="/chat" className={subNavClass}>
+                <IconChat className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Chat
+              </NavLink>
+              <NavLink to="/quiz" className={subNavClass}>
+                <IconQuiz className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Quiz
+              </NavLink>
+              <NavLink to="/drugs" className={subNavClass}>
+                <IconDrugs className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Drugs
+              </NavLink>
+              <NavLink to="/case" className={subNavClass}>
+                <IconCases className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Cases
+              </NavLink>
+              <NavLink to="/settings" className={subNavClass}>
+                <IconSettings className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
+                Settings
+              </NavLink>
+            </div>
+          </div>
+        </nav>
 
         <button type="button" className="gpt-sidebar-new-chat" disabled={isBusy} onClick={() => void handleNewChat()}>
           <span className="gpt-sidebar-new-icon" aria-hidden="true">
@@ -140,56 +167,6 @@ export function AppSidebar() {
           </span>
           New chat
         </button>
-
-        <nav className="gpt-sidebar-nav" aria-label="Product">
-          <div className="gpt-sidebar-nav-group">
-            <button
-              type="button"
-              id="sidebar-dashboard-trigger"
-              className={`gpt-sidebar-nav-parent${parentLooksActive ? ' gpt-sidebar-nav-parent-active' : ''}${dashboardOpen ? ' gpt-sidebar-nav-parent-open' : ''}`}
-              aria-expanded={dashboardOpen}
-              aria-controls="sidebar-dashboard-links"
-              onClick={toggleDashboard}
-            >
-              <span className="gpt-sidebar-nav-parent-main">
-                <IconDashboard className="gpt-sidebar-nav-svg" />
-                <span className="gpt-sidebar-nav-parent-label">Dashboard</span>
-              </span>
-              <span className="gpt-sidebar-nav-chevron" aria-hidden="true">
-                ▸
-              </span>
-            </button>
-
-            {dashboardOpen ? (
-              <div className="gpt-sidebar-nav-children" id="sidebar-dashboard-links" role="group" aria-labelledby="sidebar-dashboard-trigger">
-                <NavLink to="/" className={subNavClass} end>
-                  <IconDashboard className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Home
-                </NavLink>
-                <NavLink to="/chat" className={subNavClass}>
-                  <IconChat className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Chat
-                </NavLink>
-                <NavLink to="/quiz" className={subNavClass}>
-                  <IconQuiz className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Quiz
-                </NavLink>
-                <NavLink to="/drugs" className={subNavClass}>
-                  <IconDrugs className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Drugs
-                </NavLink>
-                <NavLink to="/case" className={subNavClass}>
-                  <IconCases className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Cases
-                </NavLink>
-                <NavLink to="/settings" className={subNavClass}>
-                  <IconSettings className="gpt-sidebar-nav-svg gpt-sidebar-nav-svg-sub" />
-                  Settings
-                </NavLink>
-              </div>
-            ) : null}
-          </div>
-        </nav>
       </div>
 
       {showChatRecents ? <ChatRecentsSection /> : <div className="gpt-sidebar-spacer" aria-hidden="true" />}

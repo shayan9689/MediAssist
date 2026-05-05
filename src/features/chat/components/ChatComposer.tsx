@@ -17,6 +17,20 @@ function SendIcon() {
   )
 }
 
+function UploadIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M12 16V4m0 0-4 4m4-4 4 4M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 type ChatComposerProps = {
   variant?: 'centered' | 'dock'
 }
@@ -24,12 +38,16 @@ type ChatComposerProps = {
 export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
   const sendUserMessage = useChatStore((state) => state.sendUserMessage)
   const createSession = useChatStore((state) => state.createSession)
+  const uploadStudyFile = useChatStore((state) => state.uploadStudyFile)
+  const stopGeneration = useChatStore((state) => state.stopGeneration)
+  const isStreaming = useChatStore((state) => state.isStreaming)
   const status = useChatStore((state) => state.status)
 
   const [draft, setDraft] = useState('')
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
-  const disabled = status === 'loading' || status === 'sending'
+  const disabled = status === 'loading' || status === 'sending' || isStreaming
 
   function syncTextareaHeight() {
     const el = textareaRef.current
@@ -63,7 +81,13 @@ export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
   const variantClass = variant === 'centered' ? 'chat-composer-centered' : 'chat-composer-dock'
 
   return (
-    <div className={`chat-composer ${variantClass}`}>
+    <form
+      className={`chat-composer ${variantClass}`}
+      onSubmit={(event) => {
+        event.preventDefault()
+        void submit()
+      }}
+    >
       <div className="gpt-composer-pill">
         <textarea
           ref={textareaRef}
@@ -74,7 +98,7 @@ export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
           disabled={disabled}
           onChange={(event) => setDraft(event.target.value)}
           onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
+            if (event.key === 'Enter' && !event.shiftKey && !event.nativeEvent.isComposing) {
               event.preventDefault()
               void submit()
             }
@@ -82,14 +106,43 @@ export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
         />
 
         <div className="gpt-composer-trailing">
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".pdf,.txt,application/pdf,text/plain"
+            hidden
+            onChange={(event) => {
+              const selected = event.target.files?.[0]
+              if (!selected) return
+              void uploadStudyFile(selected)
+              event.currentTarget.value = ''
+            }}
+          />
           <button
             type="button"
-            className="gpt-composer-send"
-            disabled={disabled || !draft.trim()}
-            aria-label={status === 'sending' ? 'Sending' : 'Send message'}
-            onClick={() => void submit()}
+            className="gpt-composer-upload"
+            disabled={disabled}
+            aria-label="Upload notes or PDF"
+            onClick={() => fileInputRef.current?.click()}
           >
-            {status === 'sending' ? (
+            <UploadIcon />
+          </button>
+          <button
+            type="submit"
+            className="gpt-composer-send"
+            disabled={status === 'loading' || (!isStreaming && !draft.trim())}
+            aria-label={isStreaming ? 'Stop generation' : status === 'sending' ? 'Sending' : 'Send message'}
+            onClick={() => {
+              if (isStreaming) {
+                stopGeneration()
+                return
+              }
+              void submit()
+            }}
+          >
+            {isStreaming ? (
+              <span className="chat-composer-stop-icon" aria-hidden="true" />
+            ) : status === 'sending' ? (
               <span className="chat-composer-send-spinner" aria-hidden="true" />
             ) : (
               <SendIcon />
@@ -97,6 +150,6 @@ export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
           </button>
         </div>
       </div>
-    </div>
+    </form>
   )
 }

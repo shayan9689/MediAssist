@@ -1,0 +1,319 @@
+NurseAI Web - Detailed Page Views Specification
+Version: 1.0
+Purpose: Detailed UI page-level requirements for redesign and implementation handoff.
+================================================================================
+0) Global Layout and Navigation
+================================================================================
+App Shell
+- Left sidebar (persistent on desktop, collapsible on tablet/mobile).
+- Main content area for active page.
+- Top toolbar in Chat page with mode/topic controls and status info.
+Primary Navigation Items
+- Dashboard
+- Chat
+- Quiz
+- Drug Reference
+- Case Study
+- Settings
+Global Interaction Rules
+- Active nav item must be visually clear.
+- Loading states must show for all async actions.
+- Error states must include cause + next action.
+- Success states must include confirmation feedback.
+- Keyboard accessibility required for all interactive controls.
+Responsive Behavior
+- Desktop: full sidebar + full page layouts.
+- Tablet: compressed spacing, sidebar collapsible.
+- Mobile: stacked content, fixed bottom-safe composer where applicable.
+================================================================================
+1) Authentication Views
+================================================================================
+1.1 Login / Signup View
+Intent
+- Authenticate user and enter platform.
+Required Sections
+- Brand/intro panel with concise value proposition.
+- Auth card with:
+  - Mode switch: Login / Sign up
+  - Email input
+  - Password input
+  - Primary submit CTA
+  - Secondary OAuth CTA (if enabled)
+  - Inline error/success feedback area
+States
+- Default
+- Submitting (button disabled + progress label)
+- Success message (for signup confirmation flow)
+- Error (friendly + actionable)
+- Network/auth failure with troubleshooting hints
+Validation
+- Email format check
+- Password min length check
+- Clear message on invalid credentials
+Session UX
+- If user is authenticated, route away from auth page automatically.
+- Session should persist after refresh (no forced re-login unless expired/signout).
+================================================================================
+2) Dashboard View
+================================================================================
+2.1 Dashboard Overview
+Intent
+- Show user progress and quick entry points.
+Header
+- Eyebrow label + title + one-line summary.
+Stats Grid
+- Chat sessions count
+- Quiz attempts count
+- Average score
+- Saved packs count
+Topic Mastery Section
+- List topics sorted weakest to strongest.
+- Each row: topic name + average percentage.
+Saved Upload Packs Section
+- List recent packs with:
+  - Source name
+  - Topic
+  - Question count
+  - Date created
+Quick Start Cards
+- Open chat
+- Open quiz hub
+- Open drug lookup
+Recent Activity
+- Recent saved packs/events with timestamp.
+States
+- Empty (new user with no data)
+- Partial data available
+- Full data
+- Load failure fallback to local data (if offline/DB unavailable)
+================================================================================
+3) Chat View
+================================================================================
+3.1 Chat Workspace - Core
+Intent
+- Primary learning interaction across modes.
+Top Toolbar
+- Mode selector (required before first message):
+  - Tutor
+  - Topic Explainer
+  - MCQ Practice
+- Topic selector
+- Auth controls (email/sign out)
+- Optional mode helper hint
+Required Mode-Selection Rule
+- User must select mode first in new/empty session.
+- Send action blocked until mode selected.
+- Show clear helper message explaining each mode.
+Conversation Area
+- Thread with user/assistant bubbles.
+- Streaming visual cursor for assistant output.
+- Regenerate action on last assistant response.
+- MCQ and upload pack cards rendered in-message when applicable.
+Composer
+- Enter = send
+- Shift+Enter = newline
+- File upload button
+- Send / Stop button behavior during generation
+Error/Status Banners
+- Loading chats
+- Working/generating
+- Error with dismiss
+3.2 Mode Behavior
+- Tutor:
+  - General conversational tutoring.
+- Topic Explainer:
+  - Structured explanation format.
+- MCQ Practice:
+  - One question at a time.
+  - Select option -> check answer -> rationale -> next question.
+  - Session score chip visible while in mode.
+3.3 Empty State (No Messages)
+- Branded hero copy.
+- Composer centered.
+- Suggestion chips (optional quick prompts).
+================================================================================
+4) Quiz Views
+================================================================================
+4.1 Quiz Hub
+Intent
+- Generate and launch custom quizzes.
+Controls Card
+- Topic input
+- Difficulty select
+- Question count select
+- Generate button
+- Loading helper message:
+  - "Generating your quiz now. This can take around 10-30 seconds..."
+Quiz List
+- Generated quizzes with:
+  - Title
+  - Topic
+  - Question count and estimated time
+  - Start CTA
+States
+- No quizzes yet
+- Generation in progress
+- Generation error
+- Loaded list
+4.2 Quiz Play
+Intent
+- Solve generated quiz interactively.
+Header
+- Back link
+- Question progress indicator
+Question Card
+- Stem
+- Options A/B/C/D...
+- Selection feedback
+- Correct/wrong highlighting after reveal
+- Rationale panel
+- Next question CTA
+4.3 Quiz Completion / Results
+Intent
+- Close loop with meaningful outcomes + next actions.
+Required Content
+- Correct answers count
+- Percentage score
+- Performance label
+- Guidance text based on score band
+Actions
+- Generate another quiz
+- Retake this quiz
+- View dashboard overview
+Persistence
+- Final score must persist to DB/local at completion.
+================================================================================
+5) Drug Reference View
+================================================================================
+5.1 Drug Lookup
+Intent
+- Retrieve structured drug study card.
+Inputs
+- Drug search field
+- Generate button
+Output Card Structure
+- Drug name
+- Class
+- Mechanism
+- Uses/indications
+- Contraindications
+- Side effects
+- Nursing notes
+- NCLEX priority
+- Safety notice (if available)
+- Source citations (if available)
+States
+- Idle (no card yet)
+- Loading
+- Success with card
+- Error with recovery hint
+================================================================================
+6) Case Study View
+================================================================================
+6.1 Scenario Generator
+Intent
+- Create realistic case scenario for clinical reasoning practice.
+Inputs
+- Condition text
+- Complexity select (basic/intermediate/advanced)
+- Generate scenario button
+Output Layout
+- Left: patient chart
+  - Title
+  - Summary bullets
+  - Vitals
+- Right: assistant prompt + debrief
+  - Initial assistant prompt
+  - Debrief points
+  - Safety notice
+  - Source citations
+States
+- No scenario generated yet
+- Generating
+- Scenario loaded
+- Error state
+================================================================================
+7) Settings View
+================================================================================
+7.1 Account and Preferences
+Intent
+- Manage user profile and product preferences.
+Recommended Sections
+- Profile summary
+- Notification preferences
+- Usage info
+- Account actions (sign out, optional delete account)
+Current Constraint
+- If some settings are not persisted yet, clearly mark as local-only.
+================================================================================
+8) Shared Components (Design System Targets)
+================================================================================
+Buttons
+- Primary, Secondary, Ghost, Danger
+- States: default/hover/active/disabled/loading
+Inputs
+- Text, password, select, textarea, file upload
+- States: default/focus/error/disabled
+Cards
+- Stat card
+- Activity row card
+- Quiz card
+- Drug card
+- Case panel card
+Feedback
+- Info banner
+- Success banner
+- Warning banner
+- Error banner
+- Inline validation text
+Tokens
+- Color tokens (semantic + brand)
+- Typography scale
+- Spacing scale (4/8 base)
+- Radius scale
+- Elevation/shadow levels
+================================================================================
+9) Accessibility Requirements
+================================================================================
+- All interactive elements keyboard reachable.
+- Visible focus ring for all controls.
+- ARIA labels for icon-only actions.
+- Color contrast meets WCAG AA baseline.
+- Motion reduced when user prefers reduced motion.
+================================================================================
+10) Performance and Quality Expectations
+================================================================================
+- Keep first meaningful interaction fast.
+- Avoid layout shifts on loading states.
+- Debounce/guard duplicate submissions.
+- Provide optimistic or immediate visual feedback after user actions.
+================================================================================
+11) Handoff Mapping (Design to Code)
+================================================================================
+Auth
+- src/features/auth/pages/LoginPage.tsx
+Dashboard
+- src/features/dashboard/pages/DashboardPage.tsx
+Chat
+- src/features/chat/components/ChatWorkspace.tsx
+- src/features/chat/components/ChatComposer.tsx
+- src/features/chat/components/ChatMessageThread.tsx
+- src/features/chat/components/ModeSelector.tsx
+Quiz
+- src/features/quiz/pages/QuizHubPage.tsx
+- src/features/quiz/pages/QuizPlayPage.tsx
+Drug
+- src/features/drugs/pages/DrugReferencePage.tsx
+Case
+- src/features/cases/pages/CaseStudyPage.tsx
+Global styles
+- src/app/styles/globals.css
+================================================================================
+12) Final Design Deliverables Needed
+================================================================================
+- Desktop + mobile screens for all pages above.
+- Component library with all states.
+- Interaction notes (hover, focus, loading, error, success).
+- Token sheet (color, type, spacing, radius, elevation).
+- Annotated developer handoff with component-to-file mapping.
+End of document.

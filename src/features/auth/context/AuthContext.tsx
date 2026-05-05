@@ -1,14 +1,46 @@
 import { useEffect, useMemo, useState, type PropsWithChildren } from 'react'
 import type { Session, SupabaseClient, User } from '@supabase/supabase-js'
 import { AuthContext, type AuthContextValue } from '@/features/auth/context/auth-context'
+import { enableMockAuth } from '@/shared/config/env'
 import { supabase } from '@/shared/lib/supabase/client'
+
+const MOCK_USER_KEY = 'nurseai.mock.user.v1'
+const MOCK_AUTH_EMAIL = 'shayan19609@gmail.com'
+const MOCK_AUTH_PASSWORD = '12345678'
+
+function createMockUser(email: string): User {
+  return {
+    id: 'mock-user-1',
+    aud: 'authenticated',
+    role: 'authenticated',
+    email,
+    app_metadata: {},
+    user_metadata: { full_name: 'Mock User' },
+    identities: [],
+    created_at: new Date().toISOString(),
+  } as User
+}
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null)
-  const [user, setUser] = useState<User | null>(null)
-  const [isLoading, setIsLoading] = useState(Boolean(supabase))
+  const [user, setUser] = useState<User | null>(() => {
+    if (!enableMockAuth) return null
+    try {
+      const saved = localStorage.getItem(MOCK_USER_KEY)
+      if (!saved) return null
+      const parsed = JSON.parse(saved) as { email?: string }
+      return parsed.email ? createMockUser(parsed.email) : null
+    } catch {
+      return null
+    }
+  })
+  const [isLoading, setIsLoading] = useState(Boolean(supabase) && !enableMockAuth)
 
   useEffect(() => {
+    if (enableMockAuth) {
+      return
+    }
+
     const client = supabase
     if (!client) {
       return
@@ -52,6 +84,62 @@ export function AuthProvider({ children }: PropsWithChildren) {
       user,
       session,
       isLoading,
+      async signInWithPassword(email: string, password: string) {
+        if (enableMockAuth) {
+          const normalizedEmail = email.trim().toLowerCase()
+          if (normalizedEmail !== MOCK_AUTH_EMAIL || password !== MOCK_AUTH_PASSWORD) {
+            throw new Error(`Mock login failed. Use ${MOCK_AUTH_EMAIL} / ${MOCK_AUTH_PASSWORD}`)
+          }
+          const mockUser = createMockUser(normalizedEmail)
+          setUser(mockUser)
+          setSession(null)
+          localStorage.setItem(MOCK_USER_KEY, JSON.stringify({ email: normalizedEmail }))
+          return
+        }
+        if (!supabase) {
+          throw new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+        }
+        const normalizedEmail = email.trim().toLowerCase()
+        if (!normalizedEmail || !password.trim()) {
+          throw new Error('Email and password are required.')
+        }
+        const { error } = await supabase.auth.signInWithPassword({
+          email: normalizedEmail,
+          password,
+        })
+        if (error) throw error
+      },
+      async signUpWithPassword(email: string, password: string) {
+        if (enableMockAuth) {
+          const normalizedEmail = email.trim().toLowerCase()
+          if (normalizedEmail !== MOCK_AUTH_EMAIL || password !== MOCK_AUTH_PASSWORD) {
+            throw new Error(`Mock signup allowed only for ${MOCK_AUTH_EMAIL} / ${MOCK_AUTH_PASSWORD}`)
+          }
+          const mockUser = createMockUser(normalizedEmail)
+          setUser(mockUser)
+          setSession(null)
+          localStorage.setItem(MOCK_USER_KEY, JSON.stringify({ email: normalizedEmail }))
+          return
+        }
+        if (!supabase) {
+          throw new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
+        }
+        const normalizedEmail = email.trim().toLowerCase()
+        if (!normalizedEmail || !password.trim()) {
+          throw new Error('Email and password are required.')
+        }
+        if (password.length < 6) {
+          throw new Error('Password must be at least 6 characters.')
+        }
+        const { error } = await supabase.auth.signUp({
+          email: normalizedEmail,
+          password,
+          options: {
+            emailRedirectTo: window.location.origin,
+          },
+        })
+        if (error) throw error
+      },
       async signInWithGoogle() {
         if (!supabase) {
           throw new Error('Supabase is not configured. Set VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.')
@@ -69,6 +157,12 @@ export function AuthProvider({ children }: PropsWithChildren) {
         }
       },
       async signOut() {
+        if (enableMockAuth) {
+          setUser(null)
+          setSession(null)
+          localStorage.removeItem(MOCK_USER_KEY)
+          return
+        }
         if (!supabase) return
 
         const { error } = await supabase.auth.signOut()

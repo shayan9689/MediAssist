@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NurseAI Dashboard Overview</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                "on-secondary-fixed": "#00201d",
+                "on-secondary-container": "#006f66",
+                "error-container": "#ffdad6",
+                "tertiary": "#8d4b00",
+                "surface-tint": "#006398",
+                "secondary": "#006a61",
+                "on-tertiary": "#ffffff",
+                "secondary-container": "#86f2e4",
+                "on-primary-container": "#fdfcff",
+                "tertiary-fixed-dim": "#ffb77d",
+                "on-surface": "#0b1c30",
+                "surface-variant": "#d3e4fe",
+                "surface-container-high": "#dce9ff",
+                "on-tertiary-container": "#fffbff",
+                "surface-bright": "#f8f9ff",
+                "on-secondary-fixed-variant": "#005049",
+                "on-primary-fixed-variant": "#004b73",
+                "surface-container-lowest": "#ffffff",
+                "outline": "#707881",
+                "on-primary-fixed": "#001d31",
+                "surface-container": "#e5eeff",
+                "primary-fixed-dim": "#93ccff",
+                "on-tertiary-fixed-variant": "#6e3900",
+                "secondary-fixed": "#89f5e7",
+                "on-tertiary-fixed": "#2f1500",
+                "on-background": "#0b1c30",
+                "inverse-primary": "#93ccff",
+                "surface": "#f8f9ff",
+                "inverse-on-surface": "#eaf1ff",
+                "on-error-container": "#93000a",
+                "primary-fixed": "#cce5ff",
+                "primary-container": "#007bb9",
+                "on-secondary": "#ffffff",
+                "outline-variant": "#bfc7d2",
+                "on-surface-variant": "#3f4850",
+                "error": "#ba1a1a",
+                "on-primary": "#ffffff",
+                "tertiary-fixed": "#ffdcc3",
+                "primary": "#006194",
+                "surface-dim": "#cbdbf5",
+                "on-error": "#ffffff",
+                "surface-container-highest": "#d3e4fe",
+                "tertiary-container": "#b15f00",
+                "inverse-surface": "#213145",
+                "surface-container-low": "#eff4ff",
+                "secondary-fixed-dim": "#6bd8cb",
+                "background": "#f8f9ff"
+            },
+            "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+            },
+            "spacing": {
+                "xs": "0.25rem",
+                "xl": "2rem",
+                "md": "1rem",
+                "base": "4px",
+                "margin-mobile": "1rem",
+                "sm": "0.5rem",
+                "margin-desktop": "2.5rem",
+                "gutter": "1.5rem",
+                "lg": "1.5rem"
+            },
+            "fontFamily": {
+                "label-caps": ["Inter"],
+                "h3": ["Manrope"],
+                "h2": ["Manrope"],
+                "body-sm": ["Inter"],
+                "h1": ["Manrope"],
+                "vitals": ["Space Grotesk"],
+                "body-main": ["Inter"],
+                "medical-term": ["Inter"]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            display: inline-block;
+            line-height: 1;
+            text-transform: none;
+            letter-spacing: normal;
+            word-wrap: normal;
+            white-space: nowrap;
+            direction: ltr;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-main">
+<div class="flex flex-col min-h-screen w-full max-w-[1440px] mx-auto bg-surface overflow-x-hidden pb-24 lg:pb-0">
+<!-- Header Section -->
+<header class="flex items-center bg-surface p-4 justify-between border-b border-outline-variant">
+<div class="flex size-12 shrink-0 items-center">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-primary-fixed" data-alt="A professional medical headshot of a friendly female nurse wearing modern blue scrubs in a brightly lit, high-key clinic setting. The lighting is soft and professional, emphasizing a modern healthcare aesthetic with clean white backgrounds and subtle blue accents. The mood is supportive and authoritative, consistent with a high-end nursing education platform." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD_MXl0SueEQVA3qELiG7RzVL5vzkYqn8-e9x2CRZlQRg0QFWOAsnZ61w9_4FElaTthht4F4QVgEPo7tvqjNr5UISm8xtWQTxymbPsnmImirtpWN_1SHItmNpWZhyupB1cEG7rPyNr4LxCJUrXSSIvYJ-B_xo9LcYrC9-5LGpinq21WAJrpu2J__srujka1RfMCINwsuIG-0TQ6Ey5bDVOGTbR34TCgf2EkLvs6sJ8a8BEP5nUadk5UNO9rPm6mS5TOHa6UhUSQfVzg")'>
+</div>
+</div>
+<h2 class="text-on-surface text-h3 lg:text-h2 flex-1 ml-3">NurseAI Dashboard</h2>
+<div class="flex items-center gap-2">
+<button class="flex items-center justify-center rounded-full size-10 bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+</button>
+</div>
+</header>
+<main class="flex-1 p-4 lg:p-xl flex flex-col gap-xl">
+<!-- Quick Start Section -->
+<section>
+<h3 class="text-on-surface text-h3 mb-md">Quick Start</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<button class="flex items-center gap-lg p-lg bg-primary rounded-xl text-on-primary shadow-sm hover:brightness-110 transition-all text-left">
+<div class="bg-primary-container p-sm rounded-lg">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">chat</span>
+</div>
+<div>
+<p class="font-semibold text-medical-term">Start AI Chat</p>
+<p class="text-body-sm opacity-90">Instant clinical guidance</p>
+</div>
+</button>
+<button class="flex items-center gap-lg p-lg bg-secondary rounded-xl text-on-secondary shadow-sm hover:brightness-110 transition-all text-left">
+<div class="bg-secondary-container p-sm rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">quiz</span>
+</div>
+<div>
+<p class="font-semibold text-medical-term">Take Practice Quiz</p>
+<p class="text-body-sm opacity-90">NCLEX-style questions</p>
+</div>
+</button>
+<button class="flex items-center gap-lg p-lg bg-tertiary rounded-xl text-on-tertiary shadow-sm hover:brightness-110 transition-all text-left">
+<div class="bg-tertiary-fixed p-sm rounded-lg">
+<span class="material-symbols-outlined text-tertiary" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<div>
+<p class="font-semibold text-medical-term">Drug Lookup</p>
+<p class="text-body-sm opacity-90">Dosage &amp; side effects</p>
+</div>
+</button>
+</div>
+</section>
+<!-- Stats Grid Section -->
+<section>
+<h3 class="text-on-surface text-h3 mb-md">Activity Metrics</h3>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-md">
+<div class="flex flex-col gap-xs rounded-xl p-lg bg-surface-container-low border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-label-caps uppercase">Chat Sessions</p>
+<div class="flex items-baseline gap-sm">
+<p class="text-on-surface text-h1 font-vitals">12</p>
+<p class="text-secondary font-semibold text-body-sm">+5% this week</p>
+</div>
+</div>
+<div class="flex flex-col gap-xs rounded-xl p-lg bg-surface-container-low border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-label-caps uppercase">Quiz Attempts</p>
+<div class="flex items-baseline gap-sm">
+<p class="text-on-surface text-h1 font-vitals">28</p>
+<p class="text-secondary font-semibold text-body-sm">+12% this week</p>
+</div>
+</div>
+<div class="flex flex-col gap-xs rounded-xl p-lg bg-surface-container-low border border-outline-variant shadow-sm">
+<p class="text-on-surface-variant text-label-caps uppercase">Avg Score</p>
+<div class="flex items-baseline gap-sm">
+<p class="text-on-surface text-h1 font-vitals">84%</p>
+<p class="text-secondary font-semibold text-body-sm">+2% vs last</p>
+</div>
+</div>
+</div>
+</section>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl">
+<!-- Topic Mastery Section -->
+<section class="flex flex-col gap-md">
+<div class="flex justify-between items-center">
+<h3 class="text-on-surface text-h3">Topic Mastery</h3>
+<a class="text-primary font-semibold text-body-sm" href="#">View all modules</a>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm">
+<!-- Item 1 -->
+<div class="flex flex-col gap-sm p-lg border-b border-outline-variant last:border-b-0">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="bg-primary-fixed p-xs rounded text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">cardiology</span>
+</div>
+<p class="font-semibold text-medical-term">Cardiology</p>
+</div>
+<span class="text-on-surface-variant text-vitals">75%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 75%"></div>
+</div>
+</div>
+<!-- Item 2 -->
+<div class="flex flex-col gap-sm p-lg border-b border-outline-variant last:border-b-0">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="bg-secondary-fixed p-xs rounded text-on-secondary-container">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">neurology</span>
+</div>
+<p class="font-semibold text-medical-term">Neurology</p>
+</div>
+<span class="text-on-surface-variant text-vitals">62%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 62%"></div>
+</div>
+</div>
+<!-- Item 3 -->
+<div class="flex flex-col gap-sm p-lg border-b border-outline-variant last:border-b-0">
+<div class="flex justify-between items-center">
+<div class="flex items-center gap-md">
+<div class="bg-tertiary-fixed p-xs rounded text-tertiary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">pill</span>
+</div>
+<p class="font-semibold text-medical-term">Pharmacology</p>
+</div>
+<span class="text-on-surface-variant text-vitals">91%</span>
+</div>
+<div class="h-2 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 91%"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Recent Activity Section -->
+<section class="flex flex-col gap-md">
+<h3 class="text-on-surface text-h3">Recent Activity</h3>
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm flex flex-col">
+<div class="p-lg flex items-start gap-md border-b border-outline-variant last:border-b-0">
+<div class="mt-1 size-8 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-primary text-[20px]" style="font-variation-settings: 'FILL' 0;">history_edu</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-on-surface font-medium">Completed 'Pharmacokinetics' quiz</p>
+<p class="text-on-surface-variant text-body-sm">Score: 9/10 • 2 hours ago</p>
+</div>
+</div>
+<div class="p-lg flex items-start gap-md border-b border-outline-variant last:border-b-0">
+<div class="mt-1 size-8 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-secondary text-[20px]" style="font-variation-settings: 'FILL' 0;">forum</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-on-surface font-medium">AI Chat: Electrolyte Imbalances</p>
+<p class="text-on-surface-variant text-body-sm">Reviewed 15 messages • 5 hours ago</p>
+</div>
+</div>
+<div class="p-lg flex items-start gap-md border-b border-outline-variant last:border-b-0">
+<div class="mt-1 size-8 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-tertiary text-[20px]" style="font-variation-settings: 'FILL' 0;">bookmark</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-on-surface font-medium">Bookmarked 'Furosemide' Drug Card</p>
+<p class="text-on-surface-variant text-body-sm">Added to clinical notes • Yesterday</p>
+</div>
+</div>
+<div class="p-lg flex items-start gap-md border-b border-outline-variant last:border-b-0">
+<div class="mt-1 size-8 rounded-full bg-surface-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-error text-[20px]" style="font-variation-settings: 'FILL' 0;">warning</span>
+</div>
+<div class="flex flex-col gap-xs">
+<p class="text-on-surface font-medium">Low Score Alert: ECG Interpretation</p>
+<p class="text-on-surface-variant text-body-sm">Scored 40% • Suggest reviewing Cardiac module</p>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Bottom Navigation Bar (Mobile only, hidden on lg desktop) -->
+<div class="lg:hidden fixed bottom-0 left-0 right-0 z-50">
+<div class="flex gap-2 border-t border-[#e6eff4] bg-[#f8fbfc] px-4 pb-3 pt-2">
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-[#0c171c]" href="#">
+<div class="text-[#0c171c] flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">home</span>
+</div>
+<p class="text-[#0c171c] text-xs font-medium leading-normal tracking-[0.015em]">Home</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#4682a0]" href="#">
+<div class="text-[#4682a0] flex h-8 items-center justify-center" data-icon="ChatTeardropText" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">chat_bubble</span>
+</div>
+<p class="text-[#4682a0] text-xs font-medium leading-normal tracking-[0.015em]">Chat</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#4682a0]" href="#">
+<div class="text-[#4682a0] flex h-8 items-center justify-center" data-icon="Exam" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">quiz</span>
+</div>
+<p class="text-[#4682a0] text-xs font-medium leading-normal tracking-[0.015em]">Quiz</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#4682a0]" href="#">
+<div class="text-[#4682a0] flex h-8 items-center justify-center" data-icon="UserCircle" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+<p class="text-[#4682a0] text-xs font-medium leading-normal tracking-[0.015em]">Profile</p>
+</a>
+</div>
+</div>
+</div>
+</body></html>

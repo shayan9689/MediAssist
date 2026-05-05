@@ -26,6 +26,9 @@ const supabaseAnonKey = data.VITE_SUPABASE_ANON_KEY.trim()
 const enableAuthRaw = raw.VITE_ENABLE_AUTH
 export const enableAuth =
   enableAuthRaw === 'true' || enableAuthRaw === '1'
+const enableMockAuthRaw = raw.VITE_ENABLE_MOCK_AUTH
+export const enableMockAuth =
+  enableMockAuthRaw === 'true' || enableMockAuthRaw === '1'
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 

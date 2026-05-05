@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NurseAI Chat Workspace</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#00201d",
+                        "on-secondary-container": "#006f66",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#8d4b00",
+                        "surface-tint": "#006398",
+                        "secondary": "#006a61",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#86f2e4",
+                        "on-primary-container": "#fdfcff",
+                        "tertiary-fixed-dim": "#ffb77d",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-fixed-variant": "#004b73",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707881",
+                        "on-primary-fixed": "#001d31",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#93ccff",
+                        "on-tertiary-fixed-variant": "#6e3900",
+                        "secondary-fixed": "#89f5e7",
+                        "on-tertiary-fixed": "#2f1500",
+                        "on-background": "#0b1c30",
+                        "inverse-primary": "#93ccff",
+                        "surface": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#cce5ff",
+                        "primary-container": "#007bb9",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bfc7d2",
+                        "on-surface-variant": "#3f4850",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc3",
+                        "primary": "#006194",
+                        "surface-dim": "#cbdbf5",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-container": "#b15f00",
+                        "inverse-surface": "#213145",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "background": "#f8f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "0.25rem",
+                        "xl": "2rem",
+                        "md": "1rem",
+                        "base": "4px",
+                        "margin-mobile": "1rem",
+                        "sm": "0.5rem",
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1.5rem",
+                        "lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Manrope"],
+                        "vitals": ["Space Grotesk"],
+                        "body-main": ["Inter"],
+                        "medical-term": ["Inter"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9ff;
+        }
+        .sidebar-width { width: 280px; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- Desktop Sidebar -->
+<aside class="hidden lg:flex sidebar-width fixed inset-y-0 left-0 bg-surface-container-low border-r border-outline-variant flex-col p-lg z-50">
+<div class="flex items-center gap-sm mb-xl">
+<div class="bg-primary p-xs rounded-lg">
+<span class="material-symbols-outlined text-on-primary">medical_services</span>
+</div>
+<h1 class="font-h2 text-h3 text-primary">NurseAI</h1>
+</div>
+<nav class="space-y-sm flex-1">
+<a class="flex items-center gap-md p-md rounded-xl bg-primary text-on-primary shadow-md" href="#">
+<span class="material-symbols-outlined">chat</span>
+<span class="font-medium">Active Session</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">history</span>
+<span class="font-medium">Recent Topics</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">quiz</span>
+<span class="font-medium">Practice Stats</span>
+</a>
+<a class="flex items-center gap-md p-md rounded-xl text-on-surface hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">library_books</span>
+<span class="font-medium">Knowledge Base</span>
+</a>
+</nav>
+<div class="pt-lg border-t border-outline-variant">
+<button class="flex w-full items-center gap-md p-md rounded-xl text-on-surface hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-medium">Settings</span>
+</button>
+</div>
+</aside>
+<!-- Main Workspace -->
+<main class="lg:ml-[280px] min-h-screen flex flex-col relative">
+<!-- Shared Header with Mode/Topic selectors -->
+<header class="sticky top-0 z-40 bg-surface border-b border-outline-variant">
+<!-- Top Nav -->
+<div class="flex items-center p-4 justify-between">
+<div class="text-[#0c171c] flex size-12 shrink-0 items-center lg:hidden" data-icon="List">
+<span class="material-symbols-outlined">menu</span>
+</div>
+<h2 class="text-[#0c171c] text-lg font-bold leading-tight tracking-[-0.015em] flex-1 lg:hidden">NurseAI</h2>
+<div class="hidden lg:block flex-1">
+<p class="text-on-surface-variant text-body-sm">Current Workspace</p>
+<h2 class="text-on-surface font-h3">Pharmacology Practice</h2>
+</div>
+<div class="flex w-12 items-center justify-end">
+<button class="flex size-12 items-center justify-center rounded-lg hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+</div>
+</div>
+<!-- Mode Selector -->
+<div class="flex px-4 py-3">
+<div class="flex h-10 flex-1 items-center justify-center rounded-lg bg-surface-container-highest p-1 max-w-2xl mx-auto">
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-surface-container-lowest has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-primary text-on-surface-variant text-sm font-medium leading-normal transition-all">
+<span class="truncate">Tutor</span>
+<input checked="" class="invisible w-0" name="mode-selector" type="radio" value="Tutor"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-surface-container-lowest has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-primary text-on-surface-variant text-sm font-medium leading-normal transition-all">
+<span class="truncate">Topic Explainer</span>
+<input class="invisible w-0" name="mode-selector" type="radio" value="Topic Explainer"/>
+</label>
+<label class="flex cursor-pointer h-full grow items-center justify-center overflow-hidden rounded-lg px-2 has-[:checked]:bg-surface-container-lowest has-[:checked]:shadow-[0_0_4px_rgba(0,0,0,0.1)] has-[:checked]:text-primary text-on-surface-variant text-sm font-medium leading-normal transition-all">
+<span class="truncate">MCQ Practice</span>
+<input class="invisible w-0" name="mode-selector" type="radio" value="MCQ Practice"/>
+</label>
+</div>
+</div>
+<!-- Topic Selection -->
+<div class="flex max-w-2xl mx-auto w-full flex-wrap items-end gap-4 px-4 pb-4">
+<label class="flex flex-col flex-1">
+<p class="text-on-surface text-body-sm font-medium pb-2">Topic Selection</p>
+<select class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-on-surface focus:outline-0 focus:ring-2 focus:ring-primary border border-outline-variant bg-surface-container-lowest h-12 px-md text-base font-normal">
+<option value="pharmacology">Pharmacology - Cardiac Meds</option>
+<option value="ethics">Nursing Ethics &amp; Legal Issues</option>
+<option value="anatomy">Advanced Human Anatomy</option>
+<option value="pediatrics">Pediatric Nursing Basics</option>
+</select>
+</label>
+</div>
+</header>
+<!-- Conversation / Workspace Area -->
+<div class="flex-1 overflow-y-auto px-4 py-8 max-w-3xl mx-auto w-full">
+<!-- Empty State (Branded Hero) -->
+<div class="flex flex-col items-center gap-xl mb-xl">
+<div class="bg-center bg-no-repeat aspect-video bg-cover rounded-2xl w-full max-w-md shadow-lg border border-outline-variant overflow-hidden" data-alt="A high-resolution, bright and modern hospital study environment. A medical textbook lies open on a clean white desk next to a glowing tablet showing complex anatomical diagrams. The lighting is soft and clinical, predominantly using whites and light blues consistent with the NurseAI branding. The atmosphere is professional, educational, and focused." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBR0FQGG5-9n_56wDmXoD025dNQIeA540W5Q_mqbJdAZC6PzwuTlsHCvUfaEGd9Wtta712_U--ndFu7XqA-QPGpvuidtbwRdTk2HkqHglmt072JMdw_3hrhlDgMvqM5g8qNjh2M4L3FjfSyCph9pEy5TnhyX1-nb9AxgCDsa2OoDI3cdUYxSZi9k5Z3YexfkZ-baGoXS19BMUswfjPiwD0dtWsyl5A4p2s7mdZlBKQxxTiBhj3IjIF6J8EfMbbgaOvo5qjuxTmpetD4');">
+</div>
+<div class="flex flex-col items-center gap-sm text-center">
+<h3 class="text-on-surface font-h2">Welcome to NurseAI Chat</h3>
+<p class="text-on-surface-variant text-body-main max-w-md">
+                        Your AI-powered nursing education assistant. Select a mode above and let's start your pharmacology review today.
+                    </p>
+</div>
+<!-- Suggestion Chips -->
+<div class="flex gap-sm p-3 flex-wrap justify-center max-w-lg">
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-full border border-primary text-primary px-lg hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[20px]">science</span>
+<p class="text-body-sm font-medium">Explain Beta Blockers</p>
+</button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-full border border-primary text-primary px-lg hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[20px]">quiz</span>
+<p class="text-body-sm font-medium">10 MCQ on Cardiac</p>
+</button>
+<button class="flex h-10 items-center justify-center gap-x-2 rounded-full border border-primary text-primary px-lg hover:bg-primary-fixed transition-colors">
+<span class="material-symbols-outlined text-[20px]">gavel</span>
+<p class="text-body-sm font-medium">Study HIPAA Ethics</p>
+</button>
+</div>
+</div>
+<!-- Example Conversation Bubbles -->
+<div class="space-y-xl mt-xl">
+<!-- User Message -->
+<div class="flex flex-col items-end gap-base">
+<div class="bg-primary text-on-primary p-lg rounded-t-2xl rounded-bl-2xl max-w-[85%] shadow-sm">
+<p class="text-body-main">Can you explain the mechanism of action for ACE inhibitors in a clinical context?</p>
+</div>
+<p class="text-[10px] text-on-surface-variant px-sm">09:42 AM</p>
+</div>
+<!-- Assistant Message -->
+<div class="flex flex-col items-start gap-base">
+<div class="flex items-center gap-sm mb-xs">
+<div class="size-8 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]">smart_toy</span>
+</div>
+<span class="text-body-sm font-bold text-on-surface">NurseAI Tutor</span>
+</div>
+<div class="bg-surface-container p-lg rounded-t-2xl rounded-br-2xl max-w-[85%] border border-outline-variant shadow-sm space-y-md">
+<p class="text-body-main">
+                            Certainly! <strong class="text-primary font-medical-term">ACE Inhibitors</strong> (Angiotensin-Converting Enzyme inhibitors) work by blocking the conversion of Angiotensin I to the potent vasoconstrictor Angiotensin II.
+                        </p>
+<div class="bg-surface-container-lowest p-md rounded-lg border border-outline-variant text-body-sm">
+<h4 class="font-bold text-primary mb-xs">Clinical Impact:</h4>
+<ul class="list-disc ml-md space-y-xs">
+<li><strong>Vasodilation:</strong> Decreases peripheral vascular resistance (afterload).</li>
+<li><strong>Sodium/Water Excretion:</strong> Reduces aldosterone secretion, aiding in fluid volume reduction.</li>
+<li><strong>Cardiac Remodeling:</strong> Prevents adverse structural changes post-MI.</li>
+</ul>
+</div>
+</div>
+<p class="text-[10px] text-on-surface-variant px-sm">09:43 AM</p>
+</div>
+</div>
+</div>
+<!-- Spacer for composer -->
+<div class="h-32"></div>
+<!-- Composer -->
+<div class="fixed bottom-0 lg:left-[280px] right-0 bg-gradient-to-t from-surface via-surface to-transparent pt-lg pb-xl px-4 lg:px-xl">
+<div class="max-w-3xl mx-auto bg-surface-container-lowest rounded-2xl border border-outline-variant shadow-xl overflow-hidden focus-within:ring-2 focus-within:ring-primary transition-all">
+<div class="flex items-center px-md py-sm">
+<button class="flex size-10 items-center justify-center rounded-full text-on-surface-variant hover:bg-surface-container-high transition-colors">
+<span class="material-symbols-outlined">attach_file</span>
+</button>
+<textarea class="flex-1 bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant py-md px-md text-body-main resize-none" placeholder="Ask NurseAI anything about Cardiac Meds..." rows="1"></textarea>
+<button class="flex size-12 items-center justify-center rounded-xl bg-primary text-on-primary hover:bg-primary-container shadow-md transition-all">
+<span class="material-symbols-outlined">send</span>
+</button>
+</div>
+<!-- Mini Toolbar -->
+<div class="bg-surface-container-low px-md py-xs border-t border-outline-variant flex gap-md">
+<button class="text-[11px] font-bold text-primary-container uppercase tracking-wider flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">format_bold</span>
+</button>
+<button class="text-[11px] font-bold text-primary-container uppercase tracking-wider flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">format_list_bulleted</span>
+</button>
+<div class="ml-auto flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary text-[14px]" style="font-variation-settings: 'FILL' 1;">bolt</span>
+<span class="text-[11px] font-medium text-on-surface-variant">GPT-4 Mode Active</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,4 +1,5 @@
 export type Topic = 'anatomy' | 'pharm' | 'medsurg' | 'nutrition' | 'psych'
+export type ChatMode = 'tutor' | 'explainer' | 'drill'
 
 export type ChatRole = 'user' | 'assistant'
 
@@ -13,6 +14,7 @@ export type ChatSession = {
   id: string
   title: string
   topic: Topic
+  mode: ChatMode
   createdAt: string
   messages: ChatMessage[]
 }

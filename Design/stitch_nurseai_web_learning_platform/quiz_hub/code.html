@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NurseAI Quiz Hub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#00201d",
+                        "on-secondary-container": "#006f66",
+                        "error-container": "#ffdad6",
+                        "tertiary": "#8d4b00",
+                        "surface-tint": "#006398",
+                        "secondary": "#006a61",
+                        "on-tertiary": "#ffffff",
+                        "secondary-container": "#86f2e4",
+                        "on-primary-container": "#fdfcff",
+                        "tertiary-fixed-dim": "#ffb77d",
+                        "on-surface": "#0b1c30",
+                        "surface-variant": "#d3e4fe",
+                        "surface-container-high": "#dce9ff",
+                        "on-tertiary-container": "#fffbff",
+                        "surface-bright": "#f8f9ff",
+                        "on-secondary-fixed-variant": "#005049",
+                        "on-primary-fixed-variant": "#004b73",
+                        "surface-container-lowest": "#ffffff",
+                        "outline": "#707881",
+                        "on-primary-fixed": "#001d31",
+                        "surface-container": "#e5eeff",
+                        "primary-fixed-dim": "#93ccff",
+                        "on-tertiary-fixed-variant": "#6e3900",
+                        "secondary-fixed": "#89f5e7",
+                        "on-tertiary-fixed": "#2f1500",
+                        "on-background": "#0b1c30",
+                        "inverse-primary": "#93ccff",
+                        "surface": "#f8f9ff",
+                        "inverse-on-surface": "#eaf1ff",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#cce5ff",
+                        "primary-container": "#007bb9",
+                        "on-secondary": "#ffffff",
+                        "outline-variant": "#bfc7d2",
+                        "on-surface-variant": "#3f4850",
+                        "error": "#ba1a1a",
+                        "on-primary": "#ffffff",
+                        "tertiary-fixed": "#ffdcc3",
+                        "primary": "#006194",
+                        "surface-dim": "#cbdbf5",
+                        "on-error": "#ffffff",
+                        "surface-container-highest": "#d3e4fe",
+                        "tertiary-container": "#b15f00",
+                        "inverse-surface": "#213145",
+                        "surface-container-low": "#eff4ff",
+                        "secondary-fixed-dim": "#6bd8cb",
+                        "background": "#f8f9ff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xs": "0.25rem",
+                        "xl": "2rem",
+                        "md": "1rem",
+                        "base": "4px",
+                        "margin-mobile": "1rem",
+                        "sm": "0.5rem",
+                        "margin-desktop": "2.5rem",
+                        "gutter": "1.5rem",
+                        "lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "label-caps": ["Inter"],
+                        "h3": ["Manrope"],
+                        "h2": ["Manrope"],
+                        "body-sm": ["Inter"],
+                        "h1": ["Manrope"],
+                        "vitals": ["Space Grotesk"],
+                        "body-main": ["Inter"],
+                        "medical-term": ["Inter"]
+                    },
+                    "fontSize": {
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                        "h3": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                        "h2": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "h1": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                        "vitals": ["14px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "body-main": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "medical-term": ["16px", {"lineHeight": "1.5", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Manrope', sans-serif;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background min-h-screen pb-20">
+<!-- Main Content Container -->
+<main class="max-w-[1440px] mx-auto px-4 lg:px-xl py-lg">
+<!-- Header Section -->
+<header class="flex items-center justify-between mb-xl">
+<div>
+<h1 class="text-h1 text-primary">NurseAI Quiz Hub</h1>
+<p class="text-body-main text-on-surface-variant">Master medical knowledge through AI-powered clinical simulations.</p>
+</div>
+<div class="hidden lg:block">
+<img alt="AI Assistant Logo" class="rounded-xl shadow-md" data-alt="A sophisticated 3D render of a glowing blue holographic brain interconnected with medical icons like stethoscopes and DNA strands. The background is a clean, bright medical clinic setting with soft white and slate-blue tones. The lighting is bright and high-key, creating an atmosphere of professional clinical intelligence and modern healthcare technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0118_ldg5IOf1wwceXh0tidLFGF-_OVna4q1Tz_XIwFNCnZ0Kh7-ghxkhL0mVnAeKVPmMQeDHv-KUzQl6LINNnuSGt5CkqkFxj_jbFHes7ysmBf0ZIWx-HHL7onVzwgfXdNwT_FG6J3c88DQiHDKFQ4ylG5lIK7ypTOEZRzQ44tIqDzggNRK9DuERDIvELHsjXl-uGjci82PMpEfvuf5jvrCBJdgE_tJSDbv0k2-ChN4YlF5J_VogFyCR8Hesl_Q2X-Dk_U-7Lt76"/>
+</div>
+</header>
+<!-- Quiz Creation Controls Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-[0_4px_12px_rgba(15,23,42,0.05)] p-lg mb-xl">
+<div class="flex items-center gap-sm mb-lg">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">add_circle</span>
+<h2 class="text-h3">Generate New Quiz</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg items-end">
+<!-- Topic Selection -->
+<div class="flex flex-col gap-base">
+<label class="text-label-caps text-on-surface-variant uppercase">Medical Topic</label>
+<select class="w-full h-12 rounded-lg border-outline-variant bg-surface text-on-surface focus:ring-2 focus:ring-primary focus:border-primary px-md">
+<option>Pharmacology &amp; Drug Calc</option>
+<option>Emergency Care (ACLS)</option>
+<option>Anatomy &amp; Physiology</option>
+<option>Medical-Surgical Nursing</option>
+<option>Pediatric Care</option>
+<option>Mental Health Nursing</option>
+</select>
+</div>
+<!-- Difficulty -->
+<div class="flex flex-col gap-base">
+<label class="text-label-caps text-on-surface-variant uppercase">Clinical Depth</label>
+<div class="flex h-12 bg-surface-container rounded-lg p-1">
+<button class="flex-1 rounded-md text-body-sm font-medium hover:bg-surface-container-highest transition-colors">Novice</button>
+<button class="flex-1 bg-surface-container-lowest shadow-sm rounded-md text-primary text-body-sm font-bold">Expert</button>
+<button class="flex-1 rounded-md text-body-sm font-medium hover:bg-surface-container-highest transition-colors">NCLEX</button>
+</div>
+</div>
+<!-- Question Count -->
+<div class="flex flex-col gap-base">
+<label class="text-label-caps text-on-surface-variant uppercase">Questions</label>
+<div class="relative">
+<input class="w-full h-12 rounded-lg border-outline-variant bg-surface text-on-surface focus:ring-2 focus:ring-primary focus:border-primary px-md pr-xl" max="50" min="5" type="number" value="15"/>
+<span class="absolute right-md top-1/2 -translate-y-1/2 text-on-surface-variant material-symbols-outlined text-sm">calculate</span>
+</div>
+</div>
+<!-- Generate Button -->
+<button class="h-12 bg-primary text-on-primary font-semibold rounded-lg hover:bg-primary-container transition-all flex items-center justify-center gap-sm shadow-md active:scale-95">
+<span class="material-symbols-outlined">psychology</span>
+                    Generate Quiz
+                </button>
+</div>
+</section>
+<!-- Loading State Indicator (Hidden by default, shown during generation) -->
+<div class="bg-primary-fixed border border-primary-fixed-dim rounded-xl p-lg mb-xl flex items-center justify-between overflow-hidden relative">
+<div class="z-10 flex items-center gap-md">
+<div class="animate-spin text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[32px]">sync</span>
+</div>
+<div>
+<h3 class="text-medical-term text-on-primary-fixed">AI is analyzing medical databases...</h3>
+<p class="text-body-sm text-on-primary-fixed-variant">Constructing evidence-based clinical scenarios for Pharmacology.</p>
+</div>
+</div>
+<div class="z-10 w-48 h-2 bg-surface-container-lowest rounded-full overflow-hidden">
+<div class="h-full bg-secondary-container w-[65%] rounded-full shadow-inner"></div>
+</div>
+<!-- Background Decoration -->
+<div class="absolute right-0 top-0 opacity-10">
+<span class="material-symbols-outlined text-[120px] -mr-10 -mt-10">medical_services</span>
+</div>
+</div>
+<!-- Previous Quizzes List -->
+<section>
+<div class="flex items-center justify-between mb-lg px-xs">
+<h2 class="text-h2">Previous Quizzes</h2>
+<div class="flex gap-sm">
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 rounded-full hover:bg-surface-container transition-colors text-outline">
+<span class="material-symbols-outlined">search</span>
+</button>
+</div>
+</div>
+<!-- Quiz Grid/List -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Quiz Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="h-2 bg-secondary"></div>
+<div class="p-lg">
+<div class="flex justify-between items-start mb-md">
+<span class="px-sm py-1 bg-secondary-container text-on-secondary-container text-label-caps rounded-full">PHARMACOLOGY</span>
+<div class="flex items-center text-vitals text-outline bg-surface px-2 py-1 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-xs mr-1">timer</span>
+                                20 MIN
+                            </div>
+</div>
+<h3 class="text-medical-term mb-xs group-hover:text-primary transition-colors">Advanced Dosage Calculations</h3>
+<p class="text-body-sm text-on-surface-variant mb-lg line-clamp-2">Reviewing IV drip rates, pediatric conversions, and titration protocols for cardiac care.</p>
+<div class="flex items-center justify-between pt-md border-t border-surface-container">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-base">format_list_numbered</span>
+<span class="text-body-sm font-medium">15 Questions</span>
+</div>
+<button class="px-md py-sm bg-surface-container-highest text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all flex items-center gap-xs">
+                                Start Quiz
+                                <span class="material-symbols-outlined text-base">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quiz Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="h-2 bg-tertiary-container"></div>
+<div class="p-lg">
+<div class="flex justify-between items-start mb-md">
+<span class="px-sm py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant text-label-caps rounded-full">EMERGENCY</span>
+<div class="flex items-center text-vitals text-outline bg-surface px-2 py-1 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-xs mr-1">timer</span>
+                                12 MIN
+                            </div>
+</div>
+<h3 class="text-medical-term mb-xs group-hover:text-tertiary transition-colors">ACLS Protocol Review</h3>
+<p class="text-body-sm text-on-surface-variant mb-lg line-clamp-2">Quick assessment of cardiac arrest algorithms and pharmaceutical interventions.</p>
+<div class="flex items-center justify-between pt-md border-t border-surface-container">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-base">format_list_numbered</span>
+<span class="text-body-sm font-medium">10 Questions</span>
+</div>
+<button class="px-md py-sm bg-surface-container-highest text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all flex items-center gap-xs">
+                                Start Quiz
+                                <span class="material-symbols-outlined text-base">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Quiz Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+<div class="h-2 bg-primary"></div>
+<div class="p-lg">
+<div class="flex justify-between items-start mb-md">
+<span class="px-sm py-1 bg-primary-fixed text-on-primary-fixed-variant text-label-caps rounded-full">ANATOMY</span>
+<div class="flex items-center text-vitals text-outline bg-surface px-2 py-1 rounded border border-outline-variant">
+<span class="material-symbols-outlined text-xs mr-1">timer</span>
+                                30 MIN
+                            </div>
+</div>
+<h3 class="text-medical-term mb-xs group-hover:text-primary transition-colors">Cardiovascular System Basics</h3>
+<p class="text-body-sm text-on-surface-variant mb-lg line-clamp-2">Detailed structure of the heart, vascular networks, and blood circulation paths.</p>
+<div class="flex items-center justify-between pt-md border-t border-surface-container">
+<div class="flex items-center gap-xs">
+<span class="material-symbols-outlined text-on-surface-variant text-base">format_list_numbered</span>
+<span class="text-body-sm font-medium">25 Questions</span>
+</div>
+<button class="px-md py-sm bg-surface-container-highest text-primary font-bold rounded-lg hover:bg-primary hover:text-on-primary transition-all flex items-center gap-xs">
+                                Start Quiz
+                                <span class="material-symbols-outlined text-base">play_arrow</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Navigation Components Logic (Shared Assets) -->
+<div class="fixed bottom-0 left-0 w-full z-50">
+<div class="flex gap-2 border-t border-outline-variant bg-surface px-4 pb-3 pt-2">
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-on-surface-variant" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="House" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">home</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Home</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-primary" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="FileText" data-size="24px" data-weight="fill">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">description</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Quizzes</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-on-surface-variant" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="ClockCounterClockwise" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">history</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">History</p>
+</a>
+<a class="flex flex-1 flex-col items-center justify-end gap-1 text-on-surface-variant" href="#">
+<div class="flex h-8 items-center justify-center" data-icon="UserCircle" data-size="24px" data-weight="regular">
+<span class="material-symbols-outlined">account_circle</span>
+</div>
+<p class="text-xs font-medium leading-normal tracking-[0.015em]">Profile</p>
+</a>
+</div>
+</div>
+</body></html>

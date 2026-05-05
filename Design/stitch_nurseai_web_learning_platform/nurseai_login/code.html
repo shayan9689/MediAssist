@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NurseAI - Clinical Login</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600;700&amp;family=Space+Grotesk:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary-container": "#b15f00",
+                      "secondary": "#006a61",
+                      "surface-container-low": "#eff4ff",
+                      "on-error": "#ffffff",
+                      "on-tertiary-fixed-variant": "#6e3900",
+                      "surface-container-lowest": "#ffffff",
+                      "surface-tint": "#006398",
+                      "on-tertiary-fixed": "#2f1500",
+                      "surface-variant": "#d3e4fe",
+                      "surface-dim": "#cbdbf5",
+                      "surface-container-high": "#dce9ff",
+                      "secondary-container": "#86f2e4",
+                      "inverse-on-surface": "#eaf1ff",
+                      "primary-container": "#007bb9",
+                      "tertiary-fixed-dim": "#ffb77d",
+                      "tertiary-fixed": "#ffdcc3",
+                      "on-secondary-fixed": "#00201d",
+                      "on-primary-fixed-variant": "#004b73",
+                      "primary-fixed-dim": "#93ccff",
+                      "inverse-surface": "#213145",
+                      "background": "#f8f9ff",
+                      "surface-container-highest": "#d3e4fe",
+                      "outline": "#707881",
+                      "on-background": "#0b1c30",
+                      "on-primary": "#ffffff",
+                      "primary": "#006194",
+                      "on-secondary-container": "#006f66",
+                      "on-error-container": "#93000a",
+                      "on-secondary-fixed-variant": "#005049",
+                      "on-surface": "#0b1c30",
+                      "tertiary": "#8d4b00",
+                      "on-primary-fixed": "#001d31",
+                      "error": "#ba1a1a",
+                      "on-secondary": "#ffffff",
+                      "on-primary-container": "#fdfcff",
+                      "surface-bright": "#f8f9ff",
+                      "inverse-primary": "#93ccff",
+                      "on-surface-variant": "#3f4850",
+                      "outline-variant": "#bfc7d2",
+                      "on-tertiary": "#ffffff",
+                      "error-container": "#ffdad6",
+                      "secondary-fixed": "#89f5e7",
+                      "surface": "#f8f9ff",
+                      "secondary-fixed-dim": "#6bd8cb",
+                      "on-tertiary-container": "#fffbff",
+                      "primary-fixed": "#cce5ff",
+                      "surface-container": "#e5eeff"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "md": "1rem",
+                      "gutter": "1.5rem",
+                      "lg": "1.5rem",
+                      "xs": "0.25rem",
+                      "margin-desktop": "2.5rem",
+                      "sm": "0.5rem",
+                      "base": "4px",
+                      "margin-mobile": "1rem",
+                      "xl": "2rem"
+              },
+              "fontFamily": {
+                      "body-sm": ["Inter"],
+                      "vitals": ["Space Grotesk"],
+                      "body-main": ["Inter"],
+                      "h3": ["Manrope"],
+                      "medical-term": ["Inter"],
+                      "h1": ["Manrope"],
+                      "h2": ["Manrope"],
+                      "label-caps": ["Inter"]
+              },
+              "fontSize": {
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "vitals": ["14px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                      "body-main": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "h3": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "medical-term": ["16px", {"lineHeight": "1.5", "fontWeight": "600"}],
+                      "h1": ["36px", {"lineHeight": "1.2", "fontWeight": "700"}],
+                      "h2": ["28px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}]
+              }
+            },
+          },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .backdrop-blur-login {
+            backdrop-filter: blur(8px);
+            background-color: rgba(255, 255, 255, 0.7);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background font-body-main text-on-background min-h-screen flex flex-col">
+<!-- Hero Brand Panel -->
+<section class="relative h-[353px] w-full flex flex-col items-center justify-center overflow-hidden bg-primary-container">
+<!-- Abstract Medical Pattern Overlay -->
+<div class="absolute inset-0 opacity-10 pointer-events-none">
+<img class="w-full h-full object-cover" data-alt="An abstract, high-key macro photograph of clean glass laboratory equipment and medical fluid textures. The aesthetic is ultra-modern and clinical, featuring a palette of soft primary blues and pristine whites. The lighting is bright and diffuse, evoking a sense of sterile precision and advanced healthcare technology. This background provides a professional, calming environment for a medical learning platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDVo8blBVqYfaO0ic5xT_33NhxwrMzfqJ2H4mlErfhPeELJinVH-K3DP5bkJyvvL1Cb6SO_SmgEJPPZ1fIxtk2FByxL_sCnASTdzh02pW16IVQtOGz1tZR9_6Ymv3EPlv-Z2S7P9NsUfr5Zt_CuOp9ywtRKmoT-A5mMBz_NWX2mfZPWrqodGUFyf3Vn_lQxsInDtcwmz4XYETw9uo-ns6m-QB_ri_LqFAwyJSeWY-T9dxG84IO5XBA-B1lOVMnI0Lw70axUOuZbrCha"/>
+</div>
+<div class="relative z-10 text-center px-margin-mobile">
+<div class="flex items-center justify-center mb-sm">
+<span class="material-symbols-outlined text-[48px] text-on-primary-container" data-icon="medical_services">medical_services</span>
+</div>
+<h1 class="font-h1 text-h1 text-on-primary-container tracking-tight">NurseAI</h1>
+<p class="font-body-main text-body-main text-on-primary-container/90 mt-xs max-w-[280px]">
+                Your clinical companion for NCLEX and beyond.
+            </p>
+</div>
+<!-- Wave Divider -->
+<div class="absolute bottom-0 left-0 right-0 h-12 bg-background rounded-t-[40px]"></div>
+</section>
+<!-- Main Content Canvas -->
+<main class="flex-1 px-margin-mobile -mt-8 relative z-20 pb-xl">
+<div class="max-w-md mx-auto">
+<!-- Auth Card -->
+<div class="bg-white rounded-xl shadow-[0_4px_12px_rgba(15,23,42,0.05)] border border-outline-variant p-lg">
+<!-- Toggle Switch -->
+<div class="flex bg-surface-container rounded-lg p-xs mb-lg">
+<button class="flex-1 py-sm px-md rounded-md bg-white shadow-sm text-primary font-h3 text-body-sm transition-all">
+                        Login
+                    </button>
+<button class="flex-1 py-sm px-md rounded-md text-on-surface-variant font-body-sm hover:bg-white/50 transition-all">
+                        Signup
+                    </button>
+</div>
+<!-- Form Section -->
+<form class="space-y-gutter">
+<!-- Email Input -->
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="email">
+                            Institutional Email
+                        </label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" data-icon="mail">mail</span>
+<input class="w-full pl-10 pr-md py-3 rounded-lg border border-outline-variant bg-surface focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-body-main text-on-surface" id="email" placeholder="nurse.practitioner@hospital.org" type="email"/>
+</div>
+</div>
+<!-- Password Input -->
+<div class="space-y-xs">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-on-surface-variant uppercase" for="password">
+                                Clinical Access Key
+                            </label>
+<a class="text-body-sm text-primary font-medium hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-[20px]" data-icon="lock">lock</span>
+<input class="w-full pl-10 pr-md py-3 rounded-lg border border-outline-variant bg-surface focus:ring-2 focus:ring-primary focus:border-primary outline-none transition-all font-body-main text-on-surface" id="password" placeholder="••••••••" type="password"/>
+<span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-outline text-[20px] cursor-pointer" data-icon="visibility">visibility</span>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-primary text-on-primary py-3.5 rounded-lg font-h3 text-body-main shadow-md active:scale-[0.98] transition-transform duration-200 flex items-center justify-center gap-sm" type="submit">
+<span>Begin Clinical Session</span>
+<span class="material-symbols-outlined text-[20px]" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</form>
+<!-- Divider -->
+<div class="relative my-lg">
+<div class="absolute inset-0 flex items-center">
+<div class="w-full border-t border-outline-variant"></div>
+</div>
+<div class="relative flex justify-center text-label-caps">
+<span class="bg-white px-md text-outline font-label-caps uppercase">Secure SSO Verification</span>
+</div>
+</div>
+<!-- Secondary Action -->
+<button class="w-full flex items-center justify-center gap-md border-1.5 border-outline-variant bg-white text-on-surface py-3 rounded-lg font-h3 text-body-sm hover:bg-surface transition-colors active:scale-[0.98] border-[1px]">
+<img alt="Google Logo" class="w-5 h-5" data-alt="A clean, isolated logo of Google G on a white background. The image is crisp and professional, symbolizing secure single sign-on authentication for medical professionals. The lighting is even and bright, matching the high-key clinical aesthetic of the NurseAI platform." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-cmJJqpk4XcomTWFeu41M-96f3eAjd4VSVmiMJfD7OXUq0nlsmlAGLkMD5vsZCZtEcTVZQcvW8pUsF5LpBo2R5TF3eA5Ot1uqDZZaNHomGF9KbYUUuu-DGnergZu4BUE8qn9jttsGbUiwrJ8fe7-edaQeA7Z6332bfsaNa0oIidRchM0powVPUHcRNlDW1aEMmQZKvrlZnoOKVlcVs8kPAl0aff7X5dz5ltjPdGxR17aNJrhqLnbfn4fOhkpWgeKE2J7J5_B9nV9H"/>
+<span>Continue with Institutional Google Account</span>
+</button>
+</div>
+<!-- Trust Footer -->
+<div class="mt-lg text-center space-y-sm">
+<p class="text-body-sm text-on-surface-variant flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[16px] text-secondary" data-icon="verified_user">verified_user</span>
+                    HIPAA Compliant &amp; Clinical Grade Encryption
+                </p>
+<div class="flex justify-center gap-lg">
+<a class="text-label-caps text-outline hover:text-primary transition-colors uppercase" href="#">Privacy Protocol</a>
+<a class="text-label-caps text-outline hover:text-primary transition-colors uppercase" href="#">Terms of Service</a>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual Information Card (Asymmetric Layout element) -->
+<aside class="px-margin-mobile mb-xl max-w-md mx-auto">
+<div class="bg-surface-container-low border border-outline-variant/50 p-md rounded-xl flex items-start gap-md">
+<div class="bg-secondary-container p-sm rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="tips_and_updates">tips_and_updates</span>
+</div>
+<div>
+<h4 class="font-h3 text-body-sm text-on-surface">Pro Tip: Drug Library Mastery</h4>
+<p class="font-body-sm text-on-surface-variant text-[13px] mt-xs">
+                    Nurses using NurseAI 15 mins daily score 24% higher on pharmacology exams.
+                </p>
+</div>
+</div>
+</aside>
+<!-- Navigation Shell Suppression: As per rules, login page suppresses TopAppBar and Navigation Shells -->
+</body></html>
