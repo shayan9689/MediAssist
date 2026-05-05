@@ -32,6 +32,16 @@ export function LoginPage() {
     return <Navigate to="/" replace />
   }
 
+  function switchAuthMode(next: 'login' | 'signup') {
+    if (next === mode || isSubmitting) return
+    setMode(next)
+    setEmail('')
+    setPassword('')
+    setShowPassword(false)
+    setErrorMessage(null)
+    setSuccessMessage(null)
+  }
+
   async function handleEmailAuth() {
     setIsSubmitting(true)
     setErrorMessage(null)
@@ -41,7 +51,12 @@ export function LoginPage() {
         await signInWithPassword(email, password)
       } else {
         await signUpWithPassword(email, password)
-        setSuccessMessage('Account created. Check your inbox to verify email if confirmation is enabled.')
+        setPassword('')
+        setShowPassword(false)
+        setMode('login')
+        setSuccessMessage(
+          'Account created. Sign in below with the same email and password. If email confirmation is on in Supabase, confirm your email first.',
+        )
       }
     } catch (error) {
       setErrorMessage(toFriendlyAuthError(error))
@@ -63,31 +78,42 @@ export function LoginPage() {
 
       <section className="auth-v2-main">
         <div className="auth-v2-card">
-          <div className="auth-v2-tabs" role="tablist" aria-label="Authentication mode">
+          <div className="auth-v2-tabs" data-mode={mode} role="tablist" aria-label="Authentication mode">
+            <span className="auth-v2-tab-indicator" aria-hidden="true" />
             <button
               type="button"
+              role="tab"
+              id="auth-tab-login"
+              aria-selected={mode === 'login'}
+              aria-controls="auth-panel"
               className={`auth-v2-tab ${mode === 'login' ? 'auth-v2-tab-active' : ''}`}
-              onClick={() => setMode('login')}
+              onClick={() => switchAuthMode('login')}
               disabled={isSubmitting}
             >
               Login
             </button>
             <button
               type="button"
+              role="tab"
+              id="auth-tab-signup"
+              aria-selected={mode === 'signup'}
+              aria-controls="auth-panel"
               className={`auth-v2-tab ${mode === 'signup' ? 'auth-v2-tab-active' : ''}`}
-              onClick={() => setMode('signup')}
+              onClick={() => switchAuthMode('signup')}
               disabled={isSubmitting}
             >
               Signup
             </button>
           </div>
 
-          <h2 className="auth-v2-title">{mode === 'login' ? 'Welcome Back' : 'Create your account'}</h2>
-          <p className="auth-v2-subtitle">
-            {mode === 'login'
-              ? 'Sign in to your clinical assistant account'
-              : 'Start your secure NurseAI workspace'}
-          </p>
+          <div key={mode} className="auth-v2-mode-copy">
+            <h2 className="auth-v2-title">{mode === 'login' ? 'Welcome Back' : 'Create your account'}</h2>
+            <p className="auth-v2-subtitle">
+              {mode === 'login'
+                ? 'Sign in to your clinical assistant account'
+                : 'Start your secure NurseAI workspace'}
+            </p>
+          </div>
 
           {!isSupabaseConfigured && !enableMockAuth ? (
             <p className="error-text">
@@ -101,7 +127,11 @@ export function LoginPage() {
           ) : null}
 
           <form
+            id="auth-panel"
+            role="tabpanel"
+            aria-labelledby={mode === 'login' ? 'auth-tab-login' : 'auth-tab-signup'}
             className="auth-v2-form"
+            autoComplete="off"
             onSubmit={(event) => {
               event.preventDefault()
               void handleEmailAuth()
@@ -112,11 +142,15 @@ export function LoginPage() {
             </label>
             <input
               id="auth-email"
+              name="email"
               type="email"
               className="auth-v2-input"
               value={email}
               onChange={(event) => setEmail(event.target.value)}
               autoComplete="email"
+              autoCapitalize="off"
+              autoCorrect="off"
+              spellCheck={false}
               placeholder="nurse.practitioner@hospital.org"
               disabled={isSubmitting || (!isSupabaseConfigured && !enableMockAuth)}
             />
@@ -131,7 +165,9 @@ export function LoginPage() {
             </div>
             <div className="auth-v2-password-wrap">
               <input
-                id="auth-password"
+                key={mode}
+                id={mode === 'login' ? 'auth-password-login' : 'auth-password-signup'}
+                name={mode === 'login' ? 'password' : 'new-password'}
                 type={showPassword ? 'text' : 'password'}
                 className="auth-v2-input auth-v2-input-password"
                 value={password}
@@ -155,7 +191,13 @@ export function LoginPage() {
               className="auth-v2-primary"
               disabled={isSubmitting || (!isSupabaseConfigured && !enableMockAuth)}
             >
-              {isSubmitting ? 'Please wait…' : mode === 'login' ? 'Begin Clinical Session' : 'Create Account'}
+              {isSubmitting ? (
+                'Please wait…'
+              ) : (
+                <span key={mode} className="auth-v2-submit-label">
+                  {mode === 'login' ? 'Begin Clinical Session' : 'Create Account'}
+                </span>
+              )}
             </button>
           </form>
 
