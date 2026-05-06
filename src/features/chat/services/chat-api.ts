@@ -110,6 +110,22 @@ function mapChatError(status: number, raw: string): string {
   return raw
 }
 
+/** Single read of error response body — avoids "body stream already read" if JSON.parse fails after partial consume. */
+async function readErrorBody(response: Response): Promise<string> {
+  const text = await response.text()
+  const trimmed = text.trim()
+  if (!trimmed) return ''
+  try {
+    const parsed = JSON.parse(text) as { error?: unknown }
+    if (typeof parsed.error === 'string' && parsed.error.trim()) {
+      return parsed.error.trim()
+    }
+  } catch {
+    /* not JSON — use raw text */
+  }
+  return trimmed
+}
+
 type StreamOptions = {
   onChunk: (chunk: string) => void
   signal?: AbortSignal
@@ -137,14 +153,7 @@ export async function streamAssistantReply(
   })
 
   if (!response.ok) {
-    const rawError = await (async () => {
-      try {
-        const maybeJson = (await response.json()) as { error?: string }
-        return maybeJson.error ?? ''
-      } catch {
-        return await response.text()
-      }
-    })()
+    const rawError = await readErrorBody(response)
     throw new Error(mapChatError(response.status, rawError))
   }
 
@@ -193,14 +202,7 @@ export async function requestDrillMcq(
   })
 
   if (!response.ok) {
-    const rawError = await (async () => {
-      try {
-        const maybeJson = (await response.json()) as { error?: string }
-        return maybeJson.error ?? ''
-      } catch {
-        return await response.text()
-      }
-    })()
+    const rawError = await readErrorBody(response)
     throw new Error(mapChatError(response.status, rawError))
   }
 
@@ -275,14 +277,7 @@ export async function extractUploadText(file: File): Promise<UploadExtractionRes
   })
 
   if (!response.ok) {
-    const rawError = await (async () => {
-      try {
-        const maybeJson = (await response.json()) as { error?: string }
-        return maybeJson.error ?? ''
-      } catch {
-        return await response.text()
-      }
-    })()
+    const rawError = await readErrorBody(response)
     throw new Error(rawError || 'Failed to process uploaded file')
   }
 
@@ -340,14 +335,7 @@ export async function requestUploadStudyPack(params: {
   })
 
   if (!response.ok) {
-    const rawError = await (async () => {
-      try {
-        const maybeJson = (await response.json()) as { error?: string }
-        return maybeJson.error ?? ''
-      } catch {
-        return await response.text()
-      }
-    })()
+    const rawError = await readErrorBody(response)
     throw new Error(rawError || 'Failed to generate study pack from upload')
   }
 

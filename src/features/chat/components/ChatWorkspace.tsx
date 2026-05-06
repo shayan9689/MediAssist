@@ -1,4 +1,5 @@
 import { useEffect, useMemo } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '@/features/auth/context/auth-context'
 import { ModeSelector } from '@/features/chat/components/ModeSelector'
 import { TopicSelector } from '@/features/chat/components/TopicSelector'
@@ -11,6 +12,8 @@ const TOOLBAR_LOGO_FILE = 'Screenshot 2026-05-01 102704.png'
 
 export function ChatWorkspace() {
   const { user } = useAuth()
+  const navigate = useNavigate()
+  const [searchParams] = useSearchParams()
   const sessions = useChatStore((state) => state.sessions)
   const activeSessionId = useChatStore((state) => state.activeSessionId)
   const topicDraft = useChatStore((state) => state.topicDraft)
@@ -27,6 +30,45 @@ export function ChatWorkspace() {
   useEffect(() => {
     void useChatStore.getState().bootstrap(user?.id ?? null)
   }, [user?.id])
+
+  useEffect(() => {
+    const raw = searchParams.get('new')
+    const wantNewChat = raw === '1' || raw === 'true' || raw === 'yes'
+    if (!wantNewChat) return
+
+    let cancelled = false
+
+    void (async () => {
+      const deadline = Date.now() + 30_000
+      let ready = false
+      while (!cancelled && Date.now() < deadline) {
+        const s = useChatStore.getState()
+        if (s.status === 'error') {
+          navigate('/chat', { replace: true })
+          return
+        }
+        if (s.persistence && s.status === 'idle') {
+          ready = true
+          break
+        }
+        await new Promise((r) => setTimeout(r, 40))
+      }
+
+      if (cancelled) return
+      if (!ready) {
+        navigate('/chat', { replace: true })
+        return
+      }
+
+      await useChatStore.getState().createSession()
+      if (cancelled) return
+      navigate('/chat', { replace: true })
+    })()
+
+    return () => {
+      cancelled = true
+    }
+  }, [searchParams, navigate, user?.id])
 
   useEffect(() => {
     const raw = user?.email?.split('@')[0] ?? ''

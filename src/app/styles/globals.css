@@ -2594,7 +2594,31 @@ code {
   }
 
   .dashboard-v2-content-grid {
-    grid-template-columns: 1fr;
+    display: block;
+    margin-inline: calc(-1 * clamp(0.75rem, 3vw, 1.25rem));
+  }
+
+  .dashboard-v2-content-scroll {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overflow-y: visible;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(0.75rem, 3vw, 1.25rem);
+    -webkit-overflow-scrolling: touch;
+    padding-inline: clamp(0.75rem, 3vw, 1.25rem);
+    padding-bottom: 0.45rem;
+    scrollbar-width: thin;
+  }
+
+  .dashboard-v2-content-scroll > .dashboard-v2-panel {
+    flex: 0 0 min(22.5rem, calc(100% - 1.25rem));
+    max-width: min(22.5rem, calc(100% - 1.25rem));
+    scroll-snap-align: start;
+    min-height: 0;
   }
 
   .dashboard-v2-stats-grid {
@@ -2937,6 +2961,10 @@ code {
   display: grid;
   grid-template-columns: 1.1fr 1fr;
   gap: 0.85rem;
+}
+
+.dashboard-v2-content-scroll {
+  display: contents;
 }
 
 .dashboard-v2-panel {

@@ -56,7 +56,12 @@ function topicGlyph(topic: string): string {
 
 function formatShortDate(iso: string): string {
   try {
-    return new Date(iso).toLocaleString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+    return new Date(iso).toLocaleString(undefined, {
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    })
   } catch {
     return iso
   }
@@ -159,7 +164,8 @@ export function DashboardPage() {
                 ? (item.questions[0] as { quizTopicDisplay?: unknown })
                 : null
             const displayTopic =
-              typeof firstQuestion?.quizTopicDisplay === 'string' && firstQuestion.quizTopicDisplay.trim()
+              typeof firstQuestion?.quizTopicDisplay === 'string' &&
+              firstQuestion.quizTopicDisplay.trim()
                 ? firstQuestion.quizTopicDisplay.trim()
                 : item.topic
             const prev = perTopic.get(displayTopic) ?? { sum: 0, count: 0 }
@@ -182,22 +188,34 @@ export function DashboardPage() {
       try {
         const localQuizzesRaw = localStorage.getItem(LOCAL_QUIZ_KEY)
         const localQuizzes = localQuizzesRaw
-          ? (JSON.parse(localQuizzesRaw) as Array<{ score?: number; total?: number; topic?: string }>)
+          ? (JSON.parse(localQuizzesRaw) as Array<{
+              score?: number
+              total?: number
+              topic?: string
+            }>)
           : []
         setQuizAttempts(localQuizzes.length)
         const completed = localQuizzes.filter(
-          (item) => typeof item.score === 'number' && typeof item.total === 'number' && (item.total ?? 0) > 0,
+          (item) =>
+            typeof item.score === 'number' &&
+            typeof item.total === 'number' &&
+            (item.total ?? 0) > 0,
         )
         if (completed.length > 0) {
           const avg =
-            completed.reduce((sum, item) => sum + ((item.score ?? 0) / (item.total ?? 1)) * 100, 0) / completed.length
+            completed.reduce(
+              (sum, item) => sum + ((item.score ?? 0) / (item.total ?? 1)) * 100,
+              0,
+            ) / completed.length
           setAvgQuizScore(Math.round(avg))
         } else {
           setAvgQuizScore(0)
         }
 
         const localChatRaw = localStorage.getItem(LOCAL_CHAT_KEY)
-        const localChat = localChatRaw ? (JSON.parse(localChatRaw) as { sessions?: unknown[] }) : null
+        const localChat = localChatRaw
+          ? (JSON.parse(localChatRaw) as { sessions?: unknown[] })
+          : null
         setChatCount(Array.isArray(localChat?.sessions) ? localChat.sessions.length : 0)
       } catch {
         setChatCount(0)
@@ -239,7 +257,9 @@ export function DashboardPage() {
           for (const row of quizRes.data) {
             const qs = row.questions
             const first =
-              Array.isArray(qs) && qs.length > 0 ? (qs[0] as { quizTitle?: unknown; quizTopicDisplay?: unknown }) : null
+              Array.isArray(qs) && qs.length > 0
+                ? (qs[0] as { quizTitle?: unknown; quizTopicDisplay?: unknown })
+                : null
             const title =
               typeof first?.quizTitle === 'string' && first.quizTitle.trim()
                 ? first.quizTitle.trim()
@@ -347,7 +367,11 @@ export function DashboardPage() {
 
         try {
           const rawC = localStorage.getItem(LOCAL_CHAT_KEY)
-          const doc = rawC ? (JSON.parse(rawC) as { sessions?: Array<{ id: string; title: string; topic: string; createdAt: string }> }) : null
+          const doc = rawC
+            ? (JSON.parse(rawC) as {
+                sessions?: Array<{ id: string; title: string; topic: string; createdAt: string }>
+              })
+            : null
           const sessions = Array.isArray(doc?.sessions) ? doc.sessions : []
           for (const s of sessions.slice(0, 12)) {
             merged.push({
@@ -385,17 +409,25 @@ export function DashboardPage() {
             </p>
           </div>
         </div>
-        <button type="button" className="dashboard-v2-notify" title="Notifications" aria-label="Notifications" disabled>
+        <button
+          type="button"
+          className="dashboard-v2-notify"
+          title="Notifications"
+          aria-label="Notifications"
+          disabled
+        >
           <span aria-hidden="true">🔔</span>
         </button>
       </header>
 
-      <p className="page-lead dashboard-v2-lead">Live overview of chat, quizzes, uploads, and topic mastery.</p>
+      <p className="page-lead dashboard-v2-lead">
+        Live overview of chat, quizzes, uploads, and topic mastery.
+      </p>
 
       <section className="dashboard-v2-quickstart">
         <h2 className="page-section-title">Quick start</h2>
         <div className="dashboard-v2-quickstart-grid dashboard-v2-quickstart-grid-4">
-          <Link to="/chat" className="dashboard-v2-quickstart-card dashboard-v2-quickstart-chat">
+          <Link to="/chat?new=1" className="dashboard-v2-quickstart-card dashboard-v2-quickstart-chat">
             <span className="dashboard-v2-quickstart-icon" aria-hidden="true">
               💬
             </span>
@@ -456,77 +488,81 @@ export function DashboardPage() {
         </div>
       </section>
 
-      <section className="dashboard-v2-content-grid">
-        <article className="dashboard-v2-panel">
-          <div className="dashboard-v2-panel-head">
-            <h2 className="page-section-title">Topic mastery</h2>
-            <Link to="/quiz" className="page-inline-link">
-              Practice quizzes
-            </Link>
-          </div>
-          {topicPerformance.length === 0 ? (
-            <p className="page-empty">No completed quizzes yet to calculate mastery.</p>
-          ) : (
-            <ul className="dashboard-v2-mastery-list">
-              {topicPerformance.slice(0, 5).map((item) => (
-                <li key={`topic-${item.topic}`} className="dashboard-v2-mastery-item">
-                  <div className="dashboard-v2-mastery-meta">
-                    <div className="dashboard-v2-mastery-label">
-                      <span className="dashboard-v2-mastery-glyph" aria-hidden="true">
-                        {topicGlyph(item.topic)}
-                      </span>
-                      <span className="dashboard-v2-mastery-topic">{item.topic}</span>
+      <section className="dashboard-v2-content-grid" aria-label="Topic mastery and recent activity">
+        <div className="dashboard-v2-content-scroll">
+          <article className="dashboard-v2-panel">
+            <div className="dashboard-v2-panel-head">
+              <h2 className="page-section-title">Topic mastery</h2>
+              <Link to="/quiz" className="page-inline-link">
+                Practice quizzes
+              </Link>
+            </div>
+            {topicPerformance.length === 0 ? (
+              <p className="page-empty">No completed quizzes yet to calculate mastery.</p>
+            ) : (
+              <ul className="dashboard-v2-mastery-list">
+                {topicPerformance.slice(0, 5).map((item) => (
+                  <li key={`topic-${item.topic}`} className="dashboard-v2-mastery-item">
+                    <div className="dashboard-v2-mastery-meta">
+                      <div className="dashboard-v2-mastery-label">
+                        <span className="dashboard-v2-mastery-glyph" aria-hidden="true">
+                          {topicGlyph(item.topic)}
+                        </span>
+                        <span className="dashboard-v2-mastery-topic">{item.topic}</span>
+                      </div>
+                      <span className="dashboard-v2-mastery-score">{item.avgPct}%</span>
                     </div>
-                    <span className="dashboard-v2-mastery-score">{item.avgPct}%</span>
-                  </div>
-                  <div className="dashboard-v2-progress-track">
-                    <div
-                      className={`dashboard-v2-progress-fill ${topicProgressColor(item.avgPct)}`}
-                      style={{ width: `${Math.min(100, Math.max(0, item.avgPct))}%` }}
-                    />
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-        </article>
-
-        <article className="dashboard-v2-panel">
-          <div className="dashboard-v2-panel-head">
-            <h2 className="page-section-title">Recent activity</h2>
-          </div>
-          {recentActivity.length === 0 ? (
-            <p className="page-empty">No recent quizzes, packs, or chats yet.</p>
-          ) : (
-            <ul className="dashboard-v2-activity-list">
-              {recentActivity.map((item) => {
-                const icon = item.kind === 'quiz' ? '📝' : item.kind === 'pack' ? '📎' : '💬'
-                const inner = (
-                  <>
-                    <span className="dashboard-v2-activity-icon" aria-hidden="true">
-                      {icon}
-                    </span>
-                    <div className="dashboard-v2-activity-body">
-                      <p className="dashboard-v2-activity-title">{item.title}</p>
-                      <p className="dashboard-v2-activity-meta">{item.meta}</p>
+                    <div className="dashboard-v2-progress-track">
+                      <div
+                        className={`dashboard-v2-progress-fill ${topicProgressColor(item.avgPct)}`}
+                        style={{ width: `${Math.min(100, Math.max(0, item.avgPct))}%` }}
+                      />
                     </div>
-                  </>
-                )
-                return (
-                  <li key={`${item.kind}-${item.id}`}>
-                    {item.href ? (
-                      <Link to={item.href} className="dashboard-v2-activity-row">
-                        {inner}
-                      </Link>
-                    ) : (
-                      <div className="dashboard-v2-activity-row dashboard-v2-activity-row-static">{inner}</div>
-                    )}
                   </li>
-                )
-              })}
-            </ul>
-          )}
-        </article>
+                ))}
+              </ul>
+            )}
+          </article>
+
+          <article className="dashboard-v2-panel">
+            <div className="dashboard-v2-panel-head">
+              <h2 className="page-section-title">Recent activity</h2>
+            </div>
+            {recentActivity.length === 0 ? (
+              <p className="page-empty">No recent quizzes, packs, or chats yet.</p>
+            ) : (
+              <ul className="dashboard-v2-activity-list">
+                {recentActivity.map((item) => {
+                  const icon = item.kind === 'quiz' ? '📝' : item.kind === 'pack' ? '📎' : '💬'
+                  const inner = (
+                    <>
+                      <span className="dashboard-v2-activity-icon" aria-hidden="true">
+                        {icon}
+                      </span>
+                      <div className="dashboard-v2-activity-body">
+                        <p className="dashboard-v2-activity-title">{item.title}</p>
+                        <p className="dashboard-v2-activity-meta">{item.meta}</p>
+                      </div>
+                    </>
+                  )
+                  return (
+                    <li key={`${item.kind}-${item.id}`}>
+                      {item.href ? (
+                        <Link to={item.href} className="dashboard-v2-activity-row">
+                          {inner}
+                        </Link>
+                      ) : (
+                        <div className="dashboard-v2-activity-row dashboard-v2-activity-row-static">
+                          {inner}
+                        </div>
+                      )}
+                    </li>
+                  )
+                })}
+              </ul>
+            )}
+          </article>
+        </div>
       </section>
 
       <section className="page-section dashboard-v2-packs-section">
@@ -534,7 +570,9 @@ export function DashboardPage() {
           <h2 className="page-section-title">Saved study packs</h2>
         </div>
         {savedPacks.length === 0 ? (
-          <p className="page-empty">No saved packs yet. Upload a PDF or TXT in Chat and save the generated pack.</p>
+          <p className="page-empty">
+            No saved packs yet. Upload a PDF or TXT in Chat and save the generated pack.
+          </p>
         ) : (
           <ul className="activity-list dashboard-v2-pack-list">
             {savedPacks.slice(0, 6).map((item) => (
@@ -543,7 +581,8 @@ export function DashboardPage() {
                 <div className="activity-body">
                   <p className="activity-title">{item.sourceName}</p>
                   <p className="activity-meta">
-                    {item.topic} · {item.questionCount} questions · {new Date(item.createdAt).toLocaleDateString()}
+                    {item.topic} · {item.questionCount} questions ·{' '}
+                    {new Date(item.createdAt).toLocaleDateString()}
                   </p>
                 </div>
               </li>
