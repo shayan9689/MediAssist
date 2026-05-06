@@ -1574,6 +1574,17 @@ code {
   justify-content: flex-end;
 }
 
+.gpt-toolbar-new-chat {
+  flex-shrink: 0;
+  margin-left: 0.25rem;
+}
+
+.gpt-toolbar-btn.gpt-toolbar-new-chat:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  transform: none;
+}
+
 .drill-score-chip {
   border-radius: 999px;
   border: 1px solid rgba(74, 222, 128, 0.45);
@@ -3424,6 +3435,10 @@ code {
     justify-content: flex-start;
     flex-wrap: wrap;
     gap: 0.45rem;
+  }
+
+  .gpt-toolbar-new-chat {
+    margin-left: auto;
   }
 
   .gpt-toolbar.gpt-toolbar-v2 .mode-selector {

@@ -26,6 +26,8 @@ export function ChatWorkspace() {
   const status = useChatStore((state) => state.status)
   const error = useChatStore((state) => state.error)
   const clearError = useChatStore((state) => state.clearError)
+  const createSession = useChatStore((state) => state.createSession)
+  const persistence = useChatStore((state) => state.persistence)
 
   useEffect(() => {
     void useChatStore.getState().bootstrap(user?.id ?? null)
@@ -125,6 +127,16 @@ export function ChatWorkspace() {
             onChange={setTopicDraft}
             disabled={status === 'loading'}
           />
+          <button
+            type="button"
+            className="gpt-toolbar-btn gpt-toolbar-new-chat"
+            aria-label="Start a new chat"
+            title="New chat"
+            disabled={!persistence || status === 'loading' || status === 'sending'}
+            onClick={() => void createSession()}
+          >
+            New chat
+          </button>
         </div>
       </header>
 
