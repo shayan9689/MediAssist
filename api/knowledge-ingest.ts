@@ -1,4 +1,5 @@
-import { ingestKnowledgeDocument, type KnowledgeIngestRequestBody } from './knowledge-shared'
+import process from 'node:process'
+import { ingestKnowledgeDocument, type KnowledgeIngestRequestBody } from './knowledge-shared.js'
 
 type ApiRequest = {
   method?: string

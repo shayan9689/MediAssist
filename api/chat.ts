@@ -1,4 +1,4 @@
-import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared'
+import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared.js'
 import {
   buildRelaxedUploadPackSchema,
   buildUploadPackSystemPrompt,
@@ -6,7 +6,8 @@ import {
   parseUploadIntent,
   validateUploadPackForIntent,
   type UploadPackIntent,
-} from './upload-pack-openai'
+} from './upload-pack-openai.js'
+import process from 'node:process'
 
 type IncomingMessage = {
   role: 'user' | 'assistant'

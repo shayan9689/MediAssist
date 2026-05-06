@@ -1,4 +1,5 @@
-import { extractFileText, parseBase64Upload, type UploadRequestBody } from './upload-shared'
+import process from 'node:process'
+import { extractFileText, parseBase64Upload, type UploadRequestBody } from './upload-shared.js'
 
 type ApiRequest = {
   method?: string

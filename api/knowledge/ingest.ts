@@ -1,3 +1,3 @@
-import handler from '../knowledge-ingest'
+import handler from '../knowledge-ingest.js'
 
 export default handler

@@ -1,3 +1,4 @@
+import { Buffer } from 'node:buffer'
 import { getDocumentProxy, renderPageAsImage } from 'unpdf'
 
 const VISION_MAX_PAGES = 10

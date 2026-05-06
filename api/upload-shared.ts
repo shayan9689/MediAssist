@@ -1,6 +1,7 @@
+import { Buffer } from 'node:buffer'
 import { extractText } from 'unpdf'
 
-import { pdfPlainTextViaOpenAiVision } from './upload-vision'
+import { pdfPlainTextViaOpenAiVision } from './upload-vision.js'
 
 const MAX_UPLOAD_BYTES = 20 * 1024 * 1024
 /** Below this many non-whitespace characters, we try OpenAI vision (when API key is set). */
@@ -130,12 +131,12 @@ async function extractPdfWithOptionalVision(params: ExtractFileTextParams): Prom
         return text
       }
       const msg = visionErr instanceof Error ? visionErr.message : 'Vision transcription failed.'
-      throw new Error(
-        parseFailed
-          ? `Could not read this PDF (${msg}). It may be encrypted, corrupted, or unsupported.`
-          : msg,
-        { cause: visionErr },
-      )
+      const composed = parseFailed
+        ? `Could not read this PDF (${msg}). It may be encrypted, corrupted, or unsupported.`
+        : msg
+      const enriched = new Error(composed) as Error & { cause?: unknown }
+      enriched.cause = visionErr
+      throw enriched
     }
   }
 

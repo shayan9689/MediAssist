@@ -1,4 +1,5 @@
-import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared'
+import process from 'node:process'
+import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared.js'
 
 type ApiRequest = {
   method?: string

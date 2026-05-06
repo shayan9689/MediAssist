@@ -1,6 +1,7 @@
+import process from 'node:process'
 import { createClient } from '@supabase/supabase-js'
-import type { UploadRequestBody } from './upload-shared'
-import { extractFileText, parseBase64Upload } from './upload-shared'
+import type { UploadRequestBody } from './upload-shared.js'
+import { extractFileText, parseBase64Upload } from './upload-shared.js'
 
 type Topic = 'anatomy' | 'pharm' | 'medsurg' | 'nutrition' | 'psych'
 

@@ -1,5 +1,6 @@
+import process from 'node:process'
 import { createClient } from '@supabase/supabase-js'
-import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared'
+import { buildGroundingSystemMessage, retrieveKnowledgeContext } from './knowledge-shared.js'
 
 type ApiRequest = {
   method?: string
