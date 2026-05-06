@@ -17,33 +17,34 @@ type CaseRequestBody = {
 }
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
-  if (req.method !== 'POST') {
-    res.status(405).send('Method not allowed')
-    return
-  }
-
-  const apiKey = process.env.OPENAI_API_KEY
-  if (!apiKey) {
-    res.status(500).json({ error: 'Missing OPENAI_API_KEY on server' })
-    return
-  }
-
-  const body = (req.body ?? {}) as CaseRequestBody
-  const condition = (body.condition ?? '').trim() || 'acute respiratory distress'
-  const complexity = body.complexity ?? 'intermediate'
-  let groundingPrompt = 'If sources are insufficient, clearly state uncertainty and keep guidance general.'
   try {
-    const matches = await retrieveKnowledgeContext({
-      query: `${condition} nursing assessment priorities interventions escalation criteria`,
-      topic: 'medsurg',
-      matchCount: 5,
-    })
-    groundingPrompt = buildGroundingSystemMessage(matches)
-  } catch {
-    // Retrieval remains best-effort for case generation.
-  }
+    if (req.method !== 'POST') {
+      res.status(405).send('Method not allowed')
+      return
+    }
 
-  try {
+    const apiKey = process.env.OPENAI_API_KEY
+    if (!apiKey) {
+      res.status(500).json({ error: 'Missing OPENAI_API_KEY on server' })
+      return
+    }
+
+    const body = (req.body ?? {}) as CaseRequestBody
+    const condition = (body.condition ?? '').trim() || 'acute respiratory distress'
+    const complexity = body.complexity ?? 'intermediate'
+    let groundingPrompt = 'If sources are insufficient, clearly state uncertainty and keep guidance general.'
+
+    try {
+      const matches = await retrieveKnowledgeContext({
+        query: `${condition} nursing assessment priorities interventions escalation criteria`,
+        topic: 'medsurg',
+        matchCount: 5,
+      })
+      groundingPrompt = buildGroundingSystemMessage(matches)
+    } catch {
+      // Retrieval remains best-effort for case generation.
+    }
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -117,8 +118,16 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
       res.status(502).json({ error: 'Empty case generation output' })
       return
     }
-    res.status(200).json({ scenario: JSON.parse(content) })
+    try {
+      const parsed = JSON.parse(content) as unknown
+      res.status(200).json({ scenario: parsed })
+      return
+    } catch {
+      res.status(502).json({ error: 'Failed to parse case generation output' })
+      return
+    }
   } catch (error) {
+    console.error('Case API error', error)
     res.status(500).json({ error: error instanceof Error ? error.message : 'Case generation failed' })
   }
 }

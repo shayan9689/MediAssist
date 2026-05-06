@@ -30,7 +30,7 @@ type DrugCard = {
 }
 
 function getSupabaseAdmin() {
-  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || ''
+  const supabaseUrl = (process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '').trim()
   const serviceRole = process.env.SUPABASE_SERVICE_ROLE_KEY || ''
   if (!supabaseUrl || !serviceRole) return null
   return createClient(supabaseUrl, serviceRole, {
@@ -111,22 +111,22 @@ async function generateDrugCard(apiKey: string, name: string, groundingPrompt: s
 }
 
 export default async function handler(req: ApiRequest, res: ApiResponse) {
-  if (req.method !== 'POST') {
-    res.status(405).send('Method not allowed')
-    return
-  }
-
-  const body = (req.body ?? {}) as DrugRequestBody
-  const name = (body.name ?? '').trim()
-  if (!name) {
-    res.status(400).json({ error: 'Drug name is required' })
-    return
-  }
-
-  const admin = getSupabaseAdmin()
-  const normalized = name.toLowerCase()
-
   try {
+    if (req.method !== 'POST') {
+      res.status(405).send('Method not allowed')
+      return
+    }
+
+    const body = (req.body ?? {}) as DrugRequestBody
+    const name = (body.name ?? '').trim()
+    if (!name) {
+      res.status(400).json({ error: 'Drug name is required' })
+      return
+    }
+
+    const admin = getSupabaseAdmin()
+    const normalized = name.toLowerCase()
+
     if (admin) {
       const { data: cached, error } = await admin
         .from('drug_cache')
@@ -185,6 +185,7 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
 
     res.status(200).json({ card, source: 'model' })
   } catch (error) {
-    res.status(400).json({ error: error instanceof Error ? error.message : 'Drug lookup failed' })
+    console.error('Drug API error', error)
+    res.status(500).json({ error: error instanceof Error ? error.message : 'Drug lookup failed' })
   }
 }
