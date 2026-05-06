@@ -109,7 +109,7 @@ export function ChatComposer({ variant = 'dock' }: ChatComposerProps) {
           <input
             ref={fileInputRef}
             type="file"
-            accept=".pdf,.txt,application/pdf,text/plain"
+            accept=".pdf,.txt,application/pdf,text/plain,application/octet-stream"
             hidden
             onChange={(event) => {
               const selected = event.target.files?.[0]

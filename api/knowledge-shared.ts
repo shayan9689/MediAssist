@@ -95,7 +95,10 @@ export async function ingestKnowledgeDocument(body: KnowledgeIngestRequestBody):
   }
 
   const parsedUpload = parseBase64Upload(body)
-  const text = await extractFileText(parsedUpload)
+  const text = await extractFileText({
+    ...parsedUpload,
+    openAiApiKey: process.env.OPENAI_API_KEY,
+  })
   const chunks = splitIntoChunks(text)
   if (chunks.length === 0) {
     throw new Error('No chunkable text found in document.')

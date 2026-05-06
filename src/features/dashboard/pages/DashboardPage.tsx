@@ -3,6 +3,22 @@ import { Link } from 'react-router-dom'
 import { useAuth } from '@/features/auth/context/auth-context'
 import { supabase } from '@/shared/lib/supabase/client'
 
+const DRILL_STATS_KEY = 'nurseai.drill.stats.v1'
+
+function ActivityTrashIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M9 3h6m-7 4h8m-9 4v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V11M10 11v6m4-6v6"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  )
+}
+
 type SavedUploadPack = {
   id: string
   sourceName: string
@@ -76,6 +92,10 @@ export function DashboardPage() {
   const [avgQuizScore, setAvgQuizScore] = useState(0)
   const [topicPerformance, setTopicPerformance] = useState<TopicPerformance[]>([])
   const [recentActivity, setRecentActivity] = useState<DashboardActivity[]>([])
+  const [dashboardRefreshKey, setDashboardRefreshKey] = useState(0)
+  const [pendingDeleteActivity, setPendingDeleteActivity] = useState<DashboardActivity | null>(null)
+  const [activityDeleteBusy, setActivityDeleteBusy] = useState(false)
+  const [activityDeleteError, setActivityDeleteError] = useState<string | null>(null)
 
   const displayName = user?.email?.split('@')[0] ?? 'Learner'
   const displayEmail = user?.email ?? ''
@@ -128,7 +148,7 @@ export function DashboardPage() {
     }
 
     void loadSavedPacks()
-  }, [userId])
+  }, [userId, dashboardRefreshKey])
 
   useEffect(() => {
     async function loadStats() {
@@ -225,7 +245,7 @@ export function DashboardPage() {
       }
     }
     void loadStats()
-  }, [userId])
+  }, [userId, dashboardRefreshKey])
 
   useEffect(() => {
     async function loadRecentActivity() {
@@ -393,7 +413,114 @@ export function DashboardPage() {
     }
 
     void loadRecentActivity()
-  }, [userId])
+  }, [userId, dashboardRefreshKey])
+
+  async function confirmDeleteRecentActivity() {
+    const item = pendingDeleteActivity
+    if (!item) return
+    setActivityDeleteBusy(true)
+    setActivityDeleteError(null)
+    try {
+      if (supabase && userId) {
+        if (item.kind === 'quiz') {
+          const { error } = await supabase
+            .from('quiz_attempts')
+            .delete()
+            .eq('id', item.id)
+            .eq('user_id', userId)
+          if (error) throw error
+        } else if (item.kind === 'pack') {
+          const { error } = await supabase
+            .from('upload_packs')
+            .delete()
+            .eq('id', item.id)
+            .eq('user_id', userId)
+          if (error) throw error
+        } else {
+          const { error } = await supabase
+            .from('chat_sessions')
+            .delete()
+            .eq('id', item.id)
+            .eq('user_id', userId)
+          if (error) throw error
+        }
+      } else {
+        if (item.kind === 'quiz') {
+          try {
+            const raw = localStorage.getItem(LOCAL_QUIZ_KEY)
+            const parsed = raw ? (JSON.parse(raw) as Array<{ id: string }>) : []
+            localStorage.setItem(
+              LOCAL_QUIZ_KEY,
+              JSON.stringify(parsed.filter((row) => row.id !== item.id)),
+            )
+            localStorage.removeItem(`nurseai.quiz.${item.id}`)
+          } catch {
+            throw new Error('Could not remove quiz from this device.')
+          }
+        } else if (item.kind === 'pack') {
+          try {
+            const raw = localStorage.getItem(LOCAL_UPLOAD_PACKS_KEY)
+            const parsed = raw
+              ? (JSON.parse(raw) as Array<{ id: string }>)
+              : []
+            localStorage.setItem(
+              LOCAL_UPLOAD_PACKS_KEY,
+              JSON.stringify(parsed.filter((row) => row.id !== item.id)),
+            )
+          } catch {
+            throw new Error('Could not remove study pack from this device.')
+          }
+        } else {
+          try {
+            const raw = localStorage.getItem(LOCAL_CHAT_KEY)
+            const doc = raw
+              ? (JSON.parse(raw) as {
+                  version?: number
+                  activeSessionId?: string | null
+                  sessions?: Array<{ id: string }>
+                })
+              : null
+            if (!doc || doc.version !== 1 || !Array.isArray(doc.sessions)) {
+              throw new Error('Invalid chat storage.')
+            }
+            const nextSessions = doc.sessions.filter((s) => s.id !== item.id)
+            let activeSessionId = doc.activeSessionId ?? null
+            if (activeSessionId === item.id) {
+              activeSessionId = nextSessions[0]?.id ?? null
+            }
+            localStorage.setItem(
+              LOCAL_CHAT_KEY,
+              JSON.stringify({
+                version: 1,
+                activeSessionId,
+                sessions: nextSessions,
+              }),
+            )
+            const rawPacks = localStorage.getItem(LOCAL_UPLOAD_PACKS_KEY)
+            const packs = rawPacks
+              ? (JSON.parse(rawPacks) as Array<{ id: string; sessionId?: string }>)
+              : []
+            localStorage.setItem(
+              LOCAL_UPLOAD_PACKS_KEY,
+              JSON.stringify(packs.filter((p) => p.sessionId !== item.id)),
+            )
+            const drillRaw = localStorage.getItem(DRILL_STATS_KEY)
+            const drillStats = drillRaw ? (JSON.parse(drillRaw) as Record<string, unknown>) : {}
+            delete drillStats[item.id]
+            localStorage.setItem(DRILL_STATS_KEY, JSON.stringify(drillStats))
+          } catch (err) {
+            throw err instanceof Error ? err : new Error('Could not remove chat from this device.')
+          }
+        }
+      }
+      setPendingDeleteActivity(null)
+      setDashboardRefreshKey((k) => k + 1)
+    } catch (err) {
+      setActivityDeleteError(err instanceof Error ? err.message : 'Delete failed.')
+    } finally {
+      setActivityDeleteBusy(false)
+    }
+  }
 
   return (
     <div className="page-root dashboard-v2-page">
@@ -528,12 +655,18 @@ export function DashboardPage() {
             <div className="dashboard-v2-panel-head">
               <h2 className="page-section-title">Recent activity</h2>
             </div>
+            {activityDeleteError ? (
+              <p className="page-empty dashboard-v2-activity-delete-error" role="alert">
+                {activityDeleteError}
+              </p>
+            ) : null}
             {recentActivity.length === 0 ? (
               <p className="page-empty">No recent quizzes, packs, or chats yet.</p>
             ) : (
               <ul className="dashboard-v2-activity-list">
                 {recentActivity.map((item) => {
                   const icon = item.kind === 'quiz' ? '📝' : item.kind === 'pack' ? '📎' : '💬'
+                  const kindLabel = item.kind === 'quiz' ? 'quiz' : item.kind === 'pack' ? 'study pack' : 'chat'
                   const inner = (
                     <>
                       <span className="dashboard-v2-activity-icon" aria-hidden="true">
@@ -547,20 +680,78 @@ export function DashboardPage() {
                   )
                   return (
                     <li key={`${item.kind}-${item.id}`}>
-                      {item.href ? (
-                        <Link to={item.href} className="dashboard-v2-activity-row">
-                          {inner}
-                        </Link>
-                      ) : (
-                        <div className="dashboard-v2-activity-row dashboard-v2-activity-row-static">
-                          {inner}
+                      <div className="dashboard-v2-activity-card">
+                        {item.href ? (
+                          <Link to={item.href} className="dashboard-v2-activity-main">
+                            {inner}
+                          </Link>
+                        ) : (
+                          <div className="dashboard-v2-activity-main dashboard-v2-activity-main-static">
+                            {inner}
+                          </div>
+                        )}
+                        <div className="dashboard-v2-activity-actions">
+                          <button
+                            type="button"
+                            className="gpt-session-menu-trigger gpt-session-delete-btn"
+                            title={`Delete this ${kindLabel}`}
+                            aria-label={`Delete ${kindLabel}: ${item.title}`}
+                            disabled={activityDeleteBusy}
+                            onClick={(e) => {
+                              e.preventDefault()
+                              setActivityDeleteError(null)
+                              setPendingDeleteActivity(item)
+                            }}
+                          >
+                            <ActivityTrashIcon />
+                          </button>
                         </div>
-                      )}
+                      </div>
                     </li>
                   )
                 })}
               </ul>
             )}
+            {pendingDeleteActivity ? (
+              <div
+                className="gpt-confirm-overlay"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="dashboard-delete-activity-title"
+              >
+                <div className="gpt-confirm-card">
+                  <h3 id="dashboard-delete-activity-title" className="gpt-confirm-title">
+                    Delete this {pendingDeleteActivity.kind === 'quiz' ? 'quiz' : pendingDeleteActivity.kind === 'pack' ? 'study pack' : 'chat'}?
+                  </h3>
+                  <p className="gpt-confirm-copy">
+                    {pendingDeleteActivity.kind === 'chat'
+                      ? 'The session and its messages will be removed. Any study packs saved in that same session are removed with it.'
+                      : 'This will be removed from your dashboard and storage. This cannot be undone.'}
+                  </p>
+                  <div className="gpt-confirm-actions">
+                    <button
+                      type="button"
+                      className="gpt-confirm-btn gpt-confirm-btn-cancel"
+                      disabled={activityDeleteBusy}
+                      onClick={() => {
+                        setActivityDeleteError(null)
+                        setPendingDeleteActivity(null)
+                      }}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="button"
+                      className="gpt-confirm-btn gpt-confirm-btn-danger"
+                      disabled={activityDeleteBusy}
+                      onClick={() => void confirmDeleteRecentActivity()}
+                    >
+                      {activityDeleteBusy ? 'Deleting…' : 'Delete'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </article>
         </div>
       </section>

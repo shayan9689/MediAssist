@@ -350,7 +350,10 @@ export default defineConfig(({ mode }) => {
             const rawBody = Buffer.concat(chunks).toString('utf8')
             const body = (rawBody ? JSON.parse(rawBody) : {}) as UploadRequestBody
             const parsed = parseBase64Upload(body)
-            const text = await extractFileText(parsed)
+            const text = await extractFileText({
+              ...parsed,
+              openAiApiKey: openAiApiKey ?? undefined,
+            })
 
             res.statusCode = 200
             res.setHeader('Content-Type', 'application/json')

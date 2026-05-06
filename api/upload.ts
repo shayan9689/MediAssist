@@ -20,7 +20,10 @@ export default async function handler(req: ApiRequest, res: ApiResponse) {
   try {
     const body = (req.body ?? {}) as UploadRequestBody
     const parsed = parseBase64Upload(body)
-    const text = await extractFileText(parsed)
+    const text = await extractFileText({
+      ...parsed,
+      openAiApiKey: process.env.OPENAI_API_KEY,
+    })
 
     res.status(200).json({
       text,
