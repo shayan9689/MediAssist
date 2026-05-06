@@ -5,7 +5,16 @@ import { enableAuth, enableMockAuth, isSupabaseConfigured } from '@/shared/confi
 
 function toFriendlyAuthError(error: unknown): string {
   const raw = error instanceof Error ? error.message : 'Authentication failed'
-  if (raw.toLowerCase().includes('failed to fetch')) {
+  const lower = raw.toLowerCase()
+  if (
+    lower.includes('user already registered') ||
+    lower.includes('already been registered') ||
+    lower.includes('email address is already registered') ||
+    lower.includes('email already exists')
+  ) {
+    return 'An account with this email already exists. Sign in instead.'
+  }
+  if (lower.includes('failed to fetch')) {
     return [
       'Network/auth request failed.',
       'Check: (1) Supabase URL/anon key in .env, (2) app opened on the same localhost URL added in Supabase Auth URL configuration, (3) browser extensions/VPN/firewall not blocking requests.',

@@ -5,8 +5,27 @@ import { enableMockAuth } from '@/shared/config/env'
 import { supabase } from '@/shared/lib/supabase/client'
 
 const MOCK_USER_KEY = 'nurseai.mock.user.v1'
+const MOCK_REGISTERED_EMAIL_KEY = 'nurseai.mock.registered-email.v1'
 const MOCK_AUTH_EMAIL = 'shayan19609@gmail.com'
 const MOCK_AUTH_PASSWORD = '12345678'
+
+const DUPLICATE_EMAIL_MESSAGE = 'An account with this email already exists. Sign in instead.'
+
+function getMockRegisteredEmail(): string | null {
+  try {
+    return localStorage.getItem(MOCK_REGISTERED_EMAIL_KEY)
+  } catch {
+    return null
+  }
+}
+
+function setMockRegisteredEmail(email: string) {
+  try {
+    localStorage.setItem(MOCK_REGISTERED_EMAIL_KEY, email)
+  } catch {
+    // ignore quota / private mode
+  }
+}
 
 function createMockUser(email: string): User {
   return {
@@ -94,6 +113,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
           setUser(mockUser)
           setSession(null)
           localStorage.setItem(MOCK_USER_KEY, JSON.stringify({ email: normalizedEmail }))
+          setMockRegisteredEmail(normalizedEmail)
           return
         }
         if (!supabase) {
@@ -115,10 +135,14 @@ export function AuthProvider({ children }: PropsWithChildren) {
           if (normalizedEmail !== MOCK_AUTH_EMAIL || password !== MOCK_AUTH_PASSWORD) {
             throw new Error(`Mock signup allowed only for ${MOCK_AUTH_EMAIL} / ${MOCK_AUTH_PASSWORD}`)
           }
+          if (getMockRegisteredEmail() === normalizedEmail) {
+            throw new Error(DUPLICATE_EMAIL_MESSAGE)
+          }
           const mockUser = createMockUser(normalizedEmail)
           setUser(mockUser)
           setSession(null)
           localStorage.setItem(MOCK_USER_KEY, JSON.stringify({ email: normalizedEmail }))
+          setMockRegisteredEmail(normalizedEmail)
           return
         }
         if (!supabase) {
@@ -131,7 +155,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
         if (password.length < 6) {
           throw new Error('Password must be at least 6 characters.')
         }
-        const { error } = await supabase.auth.signUp({
+        const { data, error } = await supabase.auth.signUp({
           email: normalizedEmail,
           password,
           options: {
@@ -139,6 +163,11 @@ export function AuthProvider({ children }: PropsWithChildren) {
           },
         })
         if (error) throw error
+
+        const identities = data.user?.identities
+        if (data.user && Array.isArray(identities) && identities.length === 0) {
+          throw new Error(DUPLICATE_EMAIL_MESSAGE)
+        }
       },
       async signInWithGoogle() {
         if (!supabase) {
